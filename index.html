@@ -1,0 +1,2235 @@
+<!DOCTYPE html>
+<html data-page-node-id="SFAUkC9favqQXi4OUNRCjx" lang="zh-CN">
+<head data-page-node-id="j15RMCdBz51RnlLHhFuvPA">
+<meta data-page-node-id="s2QhhT8XWIoZ37015QRD0h" charset="UTF-8">
+<!--pnid:a11THSI46XXHMdf0Y1Nfn6--><!-- 移动端优先：禁止缩放，适配刘海屏 -->
+<meta data-page-node-id="KzupQIRFHwFgHuaJsU02lf" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport">
+<meta data-page-node-id="63lHdvodwlCCbLRTYUk31b" content="yes" name="apple-mobile-web-app-capable">
+<meta content="#0A1F33" name="theme-color">
+<title data-page-node-id="OnGhRfG6qlnwOjyo1SeArn" data-pnid-children="aDwhFz4mJSa5WmgBZOEZkH">息屏减压 · 情绪疗愈</title>
+<style data-page-node-id="dFGBtmxTIv3kSZfW5blOlA" data-pnid-children="chBRt3xIvbzm1WclwSTpBe">
+/* ============================================================
+   息屏减压 · v3「深夜疗愈蓝」视觉皮肤
+   设计语言：深蓝纵向渐变 + 青绿光晕 + 毛玻璃 + 大圆角 + 留白
+   ------------------------------------------------------------
+   本文件只改视觉层：组件结构、交互逻辑、AudioEngine、定时器、
+   历史记录、折叠面板等全部沿用原有实现，一行业务逻辑未改。
+   所有组件仍通过原 CSS 变量名取色，因此整站自动跟随主题。
+   ============================================================ */
+:root{
+  /* —— 底色：深夜蓝 → 青绿 —— */
+  --bg-1:#0A1F33;
+  --bg-2:#0E3A4A;
+  --bg-3:#14524B;
+  /* —— 文字 —— */
+  --ink:#ECF7F5;
+  --ink-soft:rgba(212,234,231,.62);
+  /* —— 主色：青绿 → 青蓝 —— */
+  --sage:#2FE0BE;
+  --sage-2:#2FB9D8;
+  --rose:#7FE3D2;
+  --blue:#8FB6D6;
+  /* —— 毛玻璃 —— */
+  --card:rgba(255,255,255,.075);
+  --card-active:rgba(255,255,255,.13);
+  --line:rgba(255,255,255,.10);
+  --glass-line:rgba(255,255,255,.14);
+  --shadow:0 16px 40px rgba(2,10,20,.34);
+  --shadow-soft:0 8px 22px rgba(2,10,20,.22);
+  --r-lg:28px; --r-md:22px; --r-sm:16px;
+  --grad-main:linear-gradient(118deg,#2FE0BE 0%,#2FB9D8 100%);
+  /* —— 组件级配色（原变量名沿用，值整体换肤） —— */
+  --bg-linear:linear-gradient(180deg,#0A1F33 0%,#0E3A4A 55%,#14524B 100%);
+  --ov-rad-1:radial-gradient(120% 70% at 20% 0%, rgba(64,134,198,.20), transparent 62%);
+  --ov-rad-2:radial-gradient(100% 70% at 90% 100%, rgba(20,82,75,.55), transparent 62%);
+  --ov-linear:linear-gradient(180deg,#0A1F33 0%,#0E3A4A 55%,#14524B 100%);
+  --ov-shadow:0 -20px 60px rgba(0,0,0,.45);
+  --orb-glow:radial-gradient(circle,rgba(47,224,190,.30),rgba(47,185,216,.10) 45%,transparent 72%);
+  --orb-bg:radial-gradient(circle at 36% 30%, #E9FFFA 0%, #9BF4E2 16%, #4FDDD2 40%, #1C93A8 72%, #0B4C63 100%);
+  --orb-shadow:inset 0 -16px 42px rgba(9,60,80,.55), inset 0 10px 26px rgba(255,255,255,.35), 0 0 60px rgba(47,224,190,.32), 0 22px 54px rgba(2,20,30,.45);
+  --toast-bg:rgba(6,24,34,.88); --toast-ink:#DFF7F2;
+  --gate-bg:rgba(5,16,26,.66);
+  --gate-dot-bg:radial-gradient(circle at 36% 30%, #CFFFF6 0%, #63E9D8 45%, #1B7E92 100%);
+  --gate-dot-shadow:0 0 40px rgba(47,224,190,.45);
+  --switch-off:rgba(255,255,255,.14);
+  --danger-bg:rgba(255,138,138,.14); --danger-ink:#FFB4B4;
+  /* —— 场景动态背景（与原深蓝底色协调，不抢主体） —— */
+  --fx-rain:rgba(150,225,240,.30);
+  --fx-star:rgba(215,250,246,.85);
+  --fx-leaf:rgba(47,224,190,.20);
+  --fx-fire:rgba(255,168,116,.30);
+  --fx-spark:rgba(255,206,160,.60);
+  --fx-op:1;
+}
+
+/* ============================================================
+   「极夜」变体：设置页深色模式开关 → 更深的夜
+   （原黑暗模式模块保留，套用同一套设计语言，只是底更暗）
+   ============================================================ */
+:root[data-theme="dark"]{
+  --bg-1:#050E1A;
+  --bg-2:#081C26;
+  --bg-3:#0B2B2A;
+  --ink:#E2EFEE;
+  --ink-soft:rgba(190,214,212,.55);
+  --card:rgba(255,255,255,.055);
+  --card-active:rgba(255,255,255,.10);
+  --line:rgba(255,255,255,.08);
+  --glass-line:rgba(255,255,255,.11);
+  --shadow:0 16px 40px rgba(0,0,0,.46);
+  --bg-linear:linear-gradient(180deg,#050E1A 0%,#081C26 55%,#0B2B2A 100%);
+  --ov-rad-1:radial-gradient(120% 70% at 20% 0%, rgba(47,185,216,.12), transparent 62%);
+  --ov-rad-2:radial-gradient(100% 70% at 90% 100%, rgba(20,82,75,.42), transparent 62%);
+  --ov-linear:linear-gradient(180deg,#050E1A 0%,#081C26 55%,#0B2B2A 100%);
+  --orb-bg:radial-gradient(circle at 36% 30%, #D8FBF3 0%, #7FEBDC 16%, #3FC9C6 42%, #14707F 74%, #06313F 100%);
+  --fx-rain:rgba(150,225,240,.22);
+  --fx-star:rgba(215,250,246,.70);
+  --fx-leaf:rgba(47,224,190,.15);
+  --fx-fire:rgba(255,168,116,.22);
+  --fx-spark:rgba(255,206,160,.45);
+}
+/* 场景卡片 glyph 在深底上提亮 */
+:root[data-theme="dark"] .card-glyph{color:#EAFBF7}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%;background:#050D16}
+html,body{overscroll-behavior:none}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color:var(--ink);
+  /* 深蓝纵向渐变 + 顶部青光 + 底部青绿，叠加极淡星点 */
+  background:
+    radial-gradient(120% 55% at 50% -8%, rgba(64,134,198,.22), transparent 62%),
+    radial-gradient(90% 50% at 84% 6%, rgba(47,224,190,.09), transparent 60%),
+    radial-gradient(130% 70% at 50% 108%, rgba(20,82,75,.55), transparent 64%),
+    var(--bg-linear);
+  background-attachment:fixed;
+  max-width:480px;margin:0 auto;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  -webkit-font-smoothing:antialiased;
+}
+/* 星点层：极淡，不花哨 */
+body::before{
+  content:"";position:fixed;inset:0;max-width:480px;margin:0 auto;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(1.6px 1.6px at 12% 16%, rgba(255,255,255,.55), transparent 62%),
+    radial-gradient(1.4px 1.4px at 78% 9%,  rgba(210,246,242,.50), transparent 62%),
+    radial-gradient(1.8px 1.8px at 62% 26%, rgba(255,255,255,.35), transparent 62%),
+    radial-gradient(1.3px 1.3px at 27% 34%, rgba(210,246,242,.42), transparent 62%),
+    radial-gradient(1.5px 1.5px at 90% 42%, rgba(255,255,255,.30), transparent 62%),
+    radial-gradient(1.4px 1.4px at 8% 58%,  rgba(210,246,242,.32), transparent 62%),
+    radial-gradient(1.7px 1.7px at 44% 72%, rgba(255,255,255,.24), transparent 62%);
+  opacity:.85;
+}
+body::after{
+  content:"";position:fixed;left:50%;top:-14%;width:min(480px,100vw);height:52%;transform:translateX(-50%);
+  pointer-events:none;z-index:0;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(47,224,190,.13), transparent 70%);
+  filter:blur(18px);
+}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+
+/* ============================================================
+   视图系统（结构不变：首页常驻 + 全屏覆盖页）
+   ============================================================ */
+.view{position:fixed;inset:0;max-width:480px;margin:0 auto;display:flex;flex-direction:column;
+  transition:transform .38s cubic-bezier(.32,.72,.35,1),opacity .38s;pointer-events:none;opacity:0;z-index:2}
+.view.active{pointer-events:auto;opacity:1}
+#view-home{position:relative;transform:none;opacity:1;pointer-events:auto;height:100dvh;z-index:1}
+.overlay{transform:translateY(100%);
+  background:var(--ov-rad-1),var(--ov-rad-2),var(--ov-linear);
+  box-shadow:var(--ov-shadow);border-radius:var(--r-lg) var(--r-lg) 0 0}
+.overlay.active{transform:translateY(0)}
+
+/* ============================================================
+   首页
+   ============================================================ */
+.topbar{display:flex;justify-content:space-between;align-items:center;
+  padding:calc(16px + env(safe-area-inset-top)) 22px 0}
+.brand{font-size:12.5px;letter-spacing:.34em;color:rgba(212,234,231,.55);font-weight:600}
+.top-icons{display:flex;gap:10px}
+.icon-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.07);
+  border:1px solid var(--glass-line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  display:grid;place-items:center;transition:transform .2s,background .2s}
+.icon-btn:active{transform:scale(.92);background:rgba(255,255,255,.12)}
+.icon-btn svg{width:18px;height:18px;stroke:rgba(228,246,243,.78);fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+
+.home-main{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:6px 22px 6px;-webkit-overflow-scrolling:touch}
+.home-main::-webkit-scrollbar{display:none}
+
+/* 问候语 */
+.greet{text-align:center;margin:10px 0 4px;flex:none}
+.greet h1{font-size:25px;font-weight:600;letter-spacing:.14em;text-indent:.14em;color:#F1FBF9;
+  text-shadow:0 0 26px rgba(47,224,190,.22)}
+.greet p{margin-top:9px;font-size:13.5px;letter-spacing:.08em;color:rgba(212,234,231,.62)}
+
+/* ---- 呼吸光晕球（点击 = 播放 / 暂停，沿用原按钮） ---- */
+.breath-btn{width:min(60vw,230px);height:min(60vw,230px);border-radius:50%;position:relative;
+  display:block;flex:none;margin:16px 0 104px;transform:none;background:none}
+.breath-btn::before{content:"";position:absolute;inset:-30%;border-radius:50%;
+  background:var(--orb-glow);filter:blur(14px);pointer-events:none}
+.breath-orb{position:absolute;inset:0;border-radius:50%;
+  background:var(--orb-bg);
+  box-shadow:var(--orb-shadow);
+  transition:transform .3s;z-index:1}
+/* 同心涟漪：三层缓慢呼吸的细环 */
+.orb-rings{position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:0}
+.orb-rings i{position:absolute;border-radius:50%;border:1px solid rgba(120,240,225,.22);
+  animation:ringPulse 7.5s ease-in-out infinite}
+.orb-rings i:nth-child(1){inset:-8%}
+.orb-rings i:nth-child(2){inset:-16%;border-color:rgba(120,240,225,.15);animation-delay:1.1s}
+.orb-rings i:nth-child(3){inset:-24%;border-color:rgba(120,240,225,.09);animation-delay:2.2s}
+@keyframes ringPulse{0%,100%{transform:scale(.975);opacity:.55}50%{transform:scale(1.03);opacity:.95}}
+
+.breath-btn.breathing .breath-orb{animation:breathCycle 19s infinite}
+@keyframes breathCycle{
+  0%{transform:scale(.8);animation-timing-function:cubic-bezier(.42,0,.58,1)}
+  21.05%{transform:scale(1);animation-timing-function:linear}
+  57.89%{transform:scale(1);animation-timing-function:cubic-bezier(.42,0,.58,1)}
+  100%{transform:scale(.8)}
+}
+.breath-btn:not(.breathing) .breath-orb{transform:scale(.86)}
+
+.breath-text{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;pointer-events:none}
+.breath-phase{display:block;font-size:21px;letter-spacing:.34em;text-indent:.34em;
+  color:rgba(230,255,251,.88);font-weight:500;min-height:30px;line-height:30px}
+.breath-beat{display:block;font-size:54px;font-weight:600;line-height:1.02;color:#fff;
+  text-shadow:0 0 28px rgba(120,250,235,.55);min-height:54px;letter-spacing:.02em}
+/* 主按钮：青绿渐变胶囊（仍在原呼吸按钮内部，点击即播放/暂停） */
+.breath-label{position:absolute;left:50%;bottom:-92px;transform:translateX(-50%);
+  display:block;padding:15px 46px;border-radius:999px;background:var(--grad-main);
+  color:#04241F;font-size:16px;font-weight:700;letter-spacing:.2em;text-indent:.2em;white-space:nowrap;
+  box-shadow:0 16px 34px rgba(47,224,190,.26), inset 0 1px 0 rgba(255,255,255,.45);
+  pointer-events:auto;transition:background .35s,color .35s,box-shadow .35s,transform .2s}
+.breath-label:active{transform:translateX(-50%) scale(.96)}
+/* 播放中：胶囊转为毛玻璃「正在放松」态 */
+.home-main:has(.breath-btn.breathing) .breath-label{
+  background:rgba(255,255,255,.10);color:#8DF3E2;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18), 0 12px 30px rgba(2,14,24,.35)}
+
+/* 节奏说明 + 今日状态行 */
+.cadence{font-size:12.5px;letter-spacing:.14em;color:rgba(212,234,231,.48);flex:none;margin-bottom:12px}
+.status-row{display:flex;align-items:center;gap:10px;max-width:100%;
+  padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  flex:none}
+.status-key{font-size:10.5px;letter-spacing:.14em;color:rgba(47,224,190,.85);flex:none;
+  padding-right:9px;border-right:1px solid rgba(255,255,255,.12)}
+.home-status{font-size:12.5px;color:var(--ink-soft);line-height:1.4;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;min-height:0}
+
+/* 底部：三入口 + 底部导航 */
+.home-foot{padding:14px 18px calc(16px + env(safe-area-inset-bottom));flex:none;position:relative;z-index:2}
+.entry-row{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:13px}
+.entry{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+  padding:15px 6px 13px;border-radius:20px;background:rgba(255,255,255,.07);
+  border:1px solid var(--glass-line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  color:rgba(236,247,245,.88);font-size:12px;letter-spacing:.08em;
+  box-shadow:var(--shadow-soft);transition:transform .2s,background .2s}
+.entry:active{transform:scale(.96);background:rgba(255,255,255,.12)}
+.entry svg{width:23px;height:23px;stroke:rgba(47,224,190,.92);fill:none;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round}
+.tabbar{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:8px 10px;
+  border-radius:24px;background:rgba(255,255,255,.075);border:1px solid var(--glass-line);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 18px 40px rgba(2,12,20,.38)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:5px;justify-self:center;
+  min-width:96px;padding:7px 18px 5px;border-radius:16px;
+  font-size:11px;letter-spacing:.1em;color:rgba(210,232,230,.55);transition:color .2s,background .2s}
+.tab svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round}
+.tab.on{color:#2FE0BE;background:rgba(47,224,190,.10)}
+.tab.on svg{filter:drop-shadow(0 0 8px rgba(47,224,190,.55))}
+
+/* 兼容旧结构：pill 按钮（如仍有引用） */
+.pill-btn{padding:13px 30px;border-radius:999px;background:var(--card);color:var(--ink-soft);
+  font-size:14px;letter-spacing:.2em;transition:transform .2s}
+.pill-btn:active{transform:scale(.95)}
+
+/* ============================================================
+   覆盖页通用
+   ============================================================ */
+.ov-head{display:flex;align-items:center;gap:13px;padding:calc(16px + env(safe-area-inset-top)) 20px 4px}
+.ov-head .icon-btn{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.18)}
+.ov-head .icon-btn svg{stroke:rgba(240,252,249,.92)}
+.ov-title{font-size:17px;font-weight:700;letter-spacing:.1em;color:#F1FBF9}
+.ov-body{flex:1;overflow-y:auto;padding:12px 20px calc(30px + env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling:touch}
+.ov-body::-webkit-scrollbar{display:none}
+.sec-title{font-size:11px;color:rgba(212,234,231,.44);letter-spacing:.22em;margin:0 0 10px}
+
+/* ============================================================
+   场景卡片：横向滑动（结构不变，补氛围图 + 标签）
+   ============================================================ */
+.cards-wrap{position:relative}
+.cards{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding:6px 20px 14px;margin:0 -20px}
+.cards::-webkit-scrollbar{display:none}
+.cards-arrow{position:absolute;top:38%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;
+  background:rgba(10,32,48,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:0 10px 24px rgba(2,12,20,.4);border:1px solid rgba(255,255,255,.20);
+  display:grid;place-items:center;font-size:19px;color:rgba(226,250,246,.9);z-index:5;
+  transition:opacity .2s,transform .15s}
+.cards-arrow:active{transform:translateY(-50%) scale(.92)}
+.cards-arrow.prev{left:-4px}
+.cards-arrow.next{right:-4px}
+.cards-arrow[hidden]{display:none}
+.cards-dots{display:flex;justify-content:center;gap:7px;margin:2px 0 4px}
+.cards-dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.20);transition:all .25s}
+.cards-dots i.on{background:var(--sage);width:18px;border-radius:99px;box-shadow:0 0 12px rgba(47,224,190,.6)}
+
+.card{scroll-snap-align:center;flex:0 0 84%;min-width:84%;border-radius:26px;
+  background:rgba(255,255,255,.065);border:1px solid var(--glass-line);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  padding:13px 13px 15px;box-shadow:var(--shadow);transition:all .28s;position:relative}
+.card.active{border-color:rgba(47,224,190,.55);
+  box-shadow:0 18px 40px rgba(2,12,20,.42), 0 0 30px rgba(47,224,190,.16)}
+/* 氛围图：纯 CSS 渐变，不引入任何外部图片 */
+.card-art{position:relative;height:112px;border-radius:19px;overflow:hidden;margin-bottom:12px;
+  background:linear-gradient(160deg,#123A57,#0B2237)}
+.card-art::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(3,14,24,0) 38%,rgba(3,14,24,.55) 100%)}
+.card[data-scene="anxiety"] .card-art{
+  background:
+    repeating-linear-gradient(102deg, rgba(190,240,255,.12) 0 1px, transparent 1px 7px),
+    radial-gradient(90% 70% at 18% 8%, rgba(120,200,255,.42), transparent 62%),
+    radial-gradient(80% 60% at 86% 92%, rgba(47,185,216,.40), transparent 66%),
+    linear-gradient(160deg,#163F5C 0%,#0C2539 60%,#081A2A 100%)}
+.card[data-scene="tired"] .card-art{
+  background:
+    radial-gradient(60% 70% at 30% 6%, rgba(198,255,236,.34), transparent 60%),
+    radial-gradient(70% 60% at 76% 88%, rgba(47,224,190,.26), transparent 64%),
+    linear-gradient(160deg,#13493F 0%,#0D3335 62%,#08222B 100%)}
+.card[data-scene="insomnia"] .card-art{
+  background:
+    radial-gradient(1.5px 1.5px at 18% 26%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(1.5px 1.5px at 42% 14%, rgba(215,250,246,.70), transparent 60%),
+    radial-gradient(1.8px 1.8px at 68% 38%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(1.4px 1.4px at 84% 18%, rgba(215,250,246,.55), transparent 60%),
+    radial-gradient(1.5px 1.5px at 30% 62%, rgba(255,255,255,.35), transparent 60%),
+    radial-gradient(80% 70% at 50% 100%, rgba(47,185,216,.32), transparent 68%),
+    linear-gradient(160deg,#141C3C 0%,#0C1630 58%,#07121F 100%)}
+.card[data-scene="quick"] .card-art{
+  background:
+    radial-gradient(60% 60% at 50% 96%, rgba(255,176,120,.40), transparent 66%),
+    radial-gradient(40% 40% at 50% 86%, rgba(255,214,170,.34), transparent 70%),
+    linear-gradient(160deg,#1B2A3F 0%,#122436 58%,#0A1B26 100%)}
+.card-glyph{position:absolute;left:11px;top:11px;z-index:2;width:auto;height:auto;
+  padding:5px 11px;border-radius:999px;background:rgba(4,18,28,.42);
+  border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  font-size:12px;font-weight:600;letter-spacing:.1em;color:#EAFFFB;margin:0}
+.card-name{font-size:18px;font-weight:700;margin-bottom:5px;letter-spacing:.05em;color:#F3FCFA}
+.card-desc{font-size:12.5px;color:rgba(212,234,231,.60);line-height:1.65}
+.card-tag{display:inline-flex;align-items:center;gap:5px;margin-top:11px;padding:5px 11px;
+  border-radius:999px;background:rgba(47,224,190,.10);border:1px solid rgba(47,224,190,.24);
+  font-size:10.5px;letter-spacing:.06em;color:rgba(141,243,226,.92)}
+.card-flag{position:absolute;top:20px;right:20px;z-index:3;padding:4px 10px;border-radius:999px;
+  background:rgba(47,224,190,.88);color:#04241F;font-size:10px;font-weight:700;letter-spacing:.06em;
+  opacity:0;transform:translateY(-3px);transition:opacity .2s,transform .2s;box-shadow:0 6px 16px rgba(47,224,190,.35)}
+.card.active .card-flag{opacity:1;transform:none}
+
+/* ============================================================
+   面板 / 芯片 / 滑条（自定义组合、呼吸模式、动态背景、定时）
+   ============================================================ */
+.panel{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
+  border-radius:24px;padding:15px 15px 13px;margin-bottom:14px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{padding:9px 16px;border-radius:999px;background:rgba(255,255,255,.06);
+  font-size:12.5px;color:rgba(212,234,231,.66);border:1px solid rgba(255,255,255,.11);
+  transition:all .2s;white-space:nowrap}
+.chip.on{background:rgba(47,224,190,.16);border-color:rgba(47,224,190,.55);color:#9CF6E6;
+  font-weight:600;box-shadow:0 0 18px rgba(47,224,190,.16)}
+.chip:active{transform:scale(.94)}
+.timer-tip{font-size:11.5px;color:rgba(212,234,231,.42);margin-top:11px;line-height:1.7}
+.seg{display:flex;gap:8px}
+
+/* 调音台：把「自定义组合 + 音量微调」收进同一张毛玻璃卡 */
+.mixer-card{background:rgba(255,255,255,.055);border:1px solid var(--glass-line);
+  border-radius:26px;padding:18px 16px 14px;margin-bottom:14px;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:var(--shadow)}
+.mixer-head{margin-bottom:16px}
+.mixer-head h2{font-size:19px;font-weight:700;letter-spacing:.06em;color:#F3FCFA}
+.mixer-head p{margin-top:6px;font-size:12px;letter-spacing:.08em;color:rgba(212,234,231,.52)}
+.mixer-card .sec-title{margin-top:4px}
+.mixer-card .sec-title + .chips{margin-bottom:14px}
+
+/* 独立音量行 */
+.vol-row{display:flex;align-items:center;gap:13px;padding:11px 0}
+.vol-row + .vol-row{border-top:1px solid var(--line)}
+.vol-name{flex:none;width:62px;font-size:12.5px;font-weight:600;color:#E6F7F4}
+.vol-row input[type=range]{flex:1;width:auto;min-width:0}
+.vol-val{flex:none;width:42px;text-align:right;font-size:11.5px;color:rgba(212,234,231,.55);
+  font-variant-numeric:tabular-nums}
+
+/* 滑条：青绿填充 + 发光圆点（--fill 由原逻辑同步） */
+input[type=range]{-webkit-appearance:none;appearance:none;height:24px;background:transparent;outline:none}
+input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:99px;
+  background-image:linear-gradient(90deg,#2FE0BE,#2FB9D8);
+  background-size:var(--fill,50%) 100%;background-repeat:no-repeat;
+  background-color:rgba(255,255,255,.14)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;
+  background:#EAFFFA;margin-top:-5px;
+  box-shadow:0 0 0 3px rgba(47,224,190,.32), 0 0 14px rgba(47,224,190,.65)}
+input[type=range]::-moz-range-track{height:5px;border-radius:99px;background:rgba(255,255,255,.14)}
+input[type=range]::-moz-range-progress{height:5px;border-radius:99px;
+  background-image:linear-gradient(90deg,#2FE0BE,#2FB9D8)}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;border:none;border-radius:50%;
+  background:#EAFFFA;box-shadow:0 0 0 3px rgba(47,224,190,.32), 0 0 14px rgba(47,224,190,.65)}
+
+/* ============================================================
+   设置页
+   ============================================================ */
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);
+  border-radius:22px;padding:16px 18px;margin-bottom:11px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow-soft)}
+.set-label{font-size:14px;color:#E9F8F5;letter-spacing:.02em}
+.set-label small{display:block;font-size:11.5px;color:rgba(212,234,231,.46);margin-top:4px;line-height:1.45}
+.set-row input[type=range]{width:132px;flex:none}
+.switch{position:relative;width:50px;height:29px;flex:none}
+.switch input{opacity:0;width:0;height:0}
+.switch i{position:absolute;inset:0;border-radius:999px;background:var(--switch-off);transition:.25s}
+.switch i::after{content:"";position:absolute;left:3px;top:3px;width:23px;height:23px;border-radius:50%;
+  background:#DDF7F1;transition:.25s;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.switch input:checked + i{background:var(--grad-main);box-shadow:0 0 16px rgba(47,224,190,.4)}
+.switch input:checked + i::after{transform:translateX(21px);background:#052A24}
+.danger-btn{padding:10px 20px;border-radius:999px;background:var(--danger-bg);color:var(--danger-ink);
+  font-size:12.5px;font-weight:600;transition:all .2s;border:1px solid rgba(255,138,138,.22)}
+.danger-btn:active{transform:scale(.94)}
+.ver-note{margin-top:24px;text-align:center;font-size:11px;color:rgba(212,234,231,.34);line-height:1.9}
+
+/* 音效试听折叠面板（逻辑不变，只换皮） */
+.pv-toggle{cursor:pointer;user-select:none;-webkit-user-select:none;transition:transform .2s}
+.pv-toggle:active{transform:scale(.98)}
+.pv-arrow{flex:none;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;
+  transition:transform .35s cubic-bezier(.32,.72,.35,1),background .2s}
+.pv-arrow svg{width:14px;height:14px;stroke:rgba(47,224,190,.95);fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+.preview-collapse{overflow:hidden;max-height:0;visibility:hidden;
+  transition:max-height .38s cubic-bezier(.32,.72,.35,1),visibility .38s}
+.preview-collapse.open{visibility:visible}
+.preview-collapse .preview-list{opacity:0;transform:translateY(-6px);
+  transition:opacity .28s ease,transform .28s ease}
+.preview-collapse.open .preview-list{opacity:1;transform:none}
+.preview-list{margin:2px 0 10px;padding:6px 16px;border-radius:22px;
+  background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.pv-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0}
+.pv-row + .pv-row{border-top:1px solid rgba(255,255,255,.07)}
+.pv-name{font-size:12.5px;color:rgba(233,248,245,.88)}
+.pv-btn{padding:7px 15px;border-radius:999px;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);font-size:11.5px;color:rgba(212,234,231,.72);
+  transition:all .2s;white-space:nowrap}
+.pv-btn:active{transform:scale(.94)}
+.pv-btn.on{background:rgba(47,224,190,.16);border-color:rgba(47,224,190,.55);color:#9CF6E6;
+  font-weight:600;box-shadow:0 0 16px rgba(47,224,190,.16)}
+.pv-btn:disabled{opacity:.5;pointer-events:none}
+
+/* ============================================================
+   历史记录
+   ============================================================ */
+.his-item{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);
+  border-radius:22px;padding:15px 17px;margin-bottom:11px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow-soft)}
+.his-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.his-scene{font-size:14.5px;font-weight:700;color:#8DF3E2}
+.his-time{font-size:11px;color:rgba(212,234,231,.42)}
+.his-meta{font-size:12px;color:rgba(212,234,231,.55);line-height:1.6}
+.his-empty{text-align:center;color:rgba(212,234,231,.45);font-size:12.5px;padding:70px 0;line-height:2}
+
+/* ============================================================
+   轻提示 / 自动播放引导层
+   ============================================================ */
+#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));
+  transform:translate(-50%,16px);background:var(--toast-bg);color:var(--toast-ink);
+  font-size:12.5px;padding:11px 22px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  opacity:0;pointer-events:none;transition:all .3s;z-index:99;max-width:80%;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#gate{position:fixed;inset:0;z-index:90;display:none;place-items:center;background:var(--gate-bg);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#gate.show{display:grid}
+#gate .gate-inner{text-align:center}
+#gate .gate-dot{width:76px;height:76px;border-radius:50%;margin:0 auto 20px;
+  background:var(--gate-dot-bg);box-shadow:var(--gate-dot-shadow);animation:gatePulse 2.4s ease-in-out infinite}
+@keyframes gatePulse{0%,100%{transform:scale(.86)}50%{transform:scale(1.04)}}
+#gate p{font-size:13px;color:rgba(212,234,231,.72);letter-spacing:.25em}
+
+/* ============================================================
+   多模式呼吸：圆形 / 波浪（原逻辑，仅调色）
+   ============================================================ */
+.breath-btn.breathing .breath-orb{animation-name:brDyn;animation-duration:var(--br-dur,19s);
+  animation-iteration-count:infinite;animation-timing-function:cubic-bezier(.42,0,.58,1)}
+.breath-btn.wave.breathing .breath-orb{animation-name:brDyn,waveRoll;animation-duration:var(--br-dur,19s),7s;
+  animation-iteration-count:infinite;animation-timing-function:cubic-bezier(.42,0,.58,1),ease-in-out}
+@keyframes waveRoll{
+  0%,100%{border-radius:46% 54% 52% 48% / 52% 48% 52% 48%}
+  33%{border-radius:54% 46% 44% 56% / 44% 56% 46% 54%}
+  66%{border-radius:48% 52% 56% 44% / 56% 44% 48% 52%}
+}
+
+/* ============================================================
+   压力释放：步骤进度 + 可勾选感官步骤（纯 CSS，无逻辑改动）
+   ============================================================ */
+.stress-intro{font-size:12.5px;color:rgba(212,234,231,.55);line-height:1.8;margin:2px 0 14px}
+.stress-prog{display:flex;gap:6px;padding:0 20px 12px}
+.stress-prog i{flex:1;height:3px;border-radius:99px;background:rgba(255,255,255,.14);
+  transition:background .3s,box-shadow .3s}
+#view-stress:has(#gs1:checked) .stress-prog i:nth-child(1),
+#view-stress:has(#gs2:checked) .stress-prog i:nth-child(2),
+#view-stress:has(#gs3:checked) .stress-prog i:nth-child(3),
+#view-stress:has(#gs4:checked) .stress-prog i:nth-child(4),
+#view-stress:has(#gs5:checked) .stress-prog i:nth-child(5){
+  background-image:linear-gradient(90deg,#2FE0BE,#2FB9D8);box-shadow:0 0 12px rgba(47,224,190,.45)}
+.kicker,.stress-kicker{font-size:11.5px;letter-spacing:.12em;color:rgba(212,234,231,.42);margin-bottom:12px}
+
+.ex-card{background:rgba(255,255,255,.055);border:1px solid var(--glass-line);
+  border-radius:28px;box-shadow:var(--shadow);padding:20px 18px;margin-bottom:14px;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.ex-head{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-size:16px;font-weight:700;margin-bottom:8px;color:#F1FBF9;letter-spacing:.04em}
+.ex-tag{font-size:10px;color:rgba(141,243,226,.9);letter-spacing:.1em;font-weight:600;flex:none;
+  padding:4px 9px;border-radius:999px;background:rgba(47,224,190,.12);border:1px solid rgba(47,224,190,.24)}
+.ex-desc{font-size:12.5px;color:rgba(212,234,231,.58);line-height:1.8;margin-bottom:8px}
+.ex-dim{color:rgba(212,234,231,.42);font-size:11.5px}
+
+/* 可勾选步骤：整行可点，勾选后数字变青绿对勾 */
+.ex-step{display:flex;gap:13px;padding:13px 0;border-top:1px solid rgba(255,255,255,.08);
+  font-size:13px;line-height:1.65;align-items:flex-start;position:relative}
+.ex-step .ex-txt{flex:1;min-width:0}
+.ex-num{flex:none;width:32px;height:32px;border-radius:50%;position:relative;
+  display:grid;place-items:center;font-size:12px;font-weight:600;color:rgba(47,224,190,.9);
+  background:rgba(47,224,190,.07);border:1.5px solid rgba(47,224,190,.30);transition:all .25s;
+  margin-top:1px}
+.ex-num b{font-weight:600;transition:opacity .2s}
+.ex-num::after{content:"";position:absolute;inset:0;border-radius:50%;opacity:0;transform:scale(.55);
+  /* 对勾图标与青绿渐变分两层：图标在上、渐变在下（单个背景层只能放一张图） */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2304241F' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E"),linear-gradient(118deg,#2FE0BE,#2FB9D8);
+  background-position:center,center;background-size:14px 14px,100% 100%;background-repeat:no-repeat,no-repeat;
+  box-shadow:0 0 18px rgba(47,224,190,.45);transition:opacity .22s,transform .22s}
+.chk{cursor:pointer;-webkit-user-select:none;user-select:none}
+.chk input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+/* 勾选态用兄弟选择器实现（不依赖 :has，兼容老内核） */
+.chk input:checked ~ .ex-num{border-color:transparent;background:transparent}
+.chk input:checked ~ .ex-num b{opacity:0}
+.chk input:checked ~ .ex-num::after{opacity:1;transform:scale(1)}
+.chk input:checked ~ .ex-txt{color:rgba(233,248,245,.95)}
+.chk:active .ex-num{transform:scale(.92)}
+
+.ground-card{counter-reset:done}
+.ground-card input:checked{counter-increment:done}
+.step-count{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);
+  font-size:11.5px;color:rgba(212,234,231,.42);letter-spacing:.08em}
+.step-count b{color:#8DF3E2;font-weight:600;font-variant-numeric:tabular-nums}
+.step-count b::after{content:counter(done)}
+
+.ex-move{display:flex;gap:14px;padding:13px 0;border-top:1px solid rgba(255,255,255,.08);
+  font-size:13px;line-height:1.7;align-items:center;color:rgba(233,248,245,.92)}
+.ex-move:first-of-type{border-top:none}
+.ex-pulse{width:42px;height:42px;border-radius:50%;background:var(--orb-bg);
+  box-shadow:0 0 22px rgba(47,224,190,.35);animation:exPulse 3s ease-in-out infinite;flex:none}
+@keyframes exPulse{0%,100%{transform:scale(.68)}50%{transform:scale(1.06)}}
+.ex-bars{display:flex;gap:5px;align-items:flex-end;height:42px;flex:none}
+.ex-bars i{width:5px;border-radius:99px;background:var(--sage);opacity:.55;animation:exBar 2.4s ease-in-out infinite}
+.ex-bars i:nth-child(2){animation-delay:.3s}.ex-bars i:nth-child(3){animation-delay:.6s}.ex-bars i:nth-child(4){animation-delay:.9s}
+@keyframes exBar{0%,100%{height:28%}50%{height:100%}}
+
+/* ============================================================
+   场景动态背景（纯 CSS，逻辑不变；配色对齐深蓝）
+   ============================================================ */
+#bg-fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;max-width:480px;margin:0 auto;
+  opacity:0;transition:opacity 1s}
+#bg-fx.on{opacity:var(--fx-op)}
+#bg-fx .layer{position:absolute;inset:0;display:none}
+#bg-fx[data-fx="rain"]   .fx-rain,
+#bg-fx[data-fx="stars"]  .fx-stars,
+#bg-fx[data-fx="forest"] .fx-forest,
+#bg-fx[data-fx="fire"]   .fx-fire{display:block}
+#bg-fx.paused *{animation-play-state:paused!important}
+.fx-drop{position:absolute;top:-14%;width:1.4px;height:54px;border-radius:99px;
+  background:linear-gradient(to bottom,transparent,var(--fx-rain));animation:fxFall linear infinite}
+@keyframes fxFall{to{transform:translateY(124vh)}}
+.fx-ripple{position:absolute;bottom:5%;width:110px;height:24px;border-radius:50%;
+  border:1.4px solid var(--fx-rain);opacity:0;animation:fxRipple 4.5s ease-out infinite}
+@keyframes fxRipple{0%{transform:translateX(-50%) scale(.35);opacity:.55}100%{transform:translateX(-50%) scale(1.7);opacity:0}}
+.fx-star{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--fx-star);
+  animation:fxTwinkle 3.2s ease-in-out infinite}
+@keyframes fxTwinkle{0%,100%{opacity:.12;transform:scale(.75)}50%{opacity:.95;transform:scale(1.2)}}
+.fx-blob{position:absolute;border-radius:50%;filter:blur(38px);background:var(--fx-leaf);
+  animation:fxDrift 15s ease-in-out infinite}
+@keyframes fxDrift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(20px,-26px) scale(1.14)}}
+.fx-fire-glow{position:absolute;left:50%;bottom:-14%;width:72%;height:46%;transform:translateX(-50%);
+  border-radius:50%;filter:blur(30px);background:var(--fx-fire);animation:fxFlicker 2.6s ease-in-out infinite}
+@keyframes fxFlicker{0%,100%{transform:translateX(-50%) scale(1);opacity:.7}50%{transform:translateX(-50%) scale(1.14);opacity:1}}
+.fx-spark{position:absolute;bottom:6%;width:4px;height:4px;border-radius:50%;background:var(--fx-spark);
+  animation:fxRise 4.2s linear infinite}
+@keyframes fxRise{0%{transform:translateY(0);opacity:0}18%{opacity:.9}100%{transform:translateY(-48vh);opacity:0}}
+
+/* ============================================================
+   练习完成 + 知识小卡片 + 本周足迹
+   ============================================================ */
+#tip-card{position:fixed;inset:0;z-index:95;display:none;place-items:center;padding:26px;
+  background:rgba(4,14,24,.68);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#tip-card.show{display:grid}
+.tip-wrap{width:100%;max-width:344px;display:flex;flex-direction:column;align-items:center}
+.tip-badge{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;margin-bottom:16px;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.24);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 0 34px rgba(47,224,190,.35), inset 0 0 18px rgba(47,224,190,.18)}
+.tip-badge svg{width:27px;height:27px;stroke:#2FE0BE;fill:none;stroke-width:2.6;stroke-linecap:round;
+  stroke-linejoin:round;filter:drop-shadow(0 0 8px rgba(47,224,190,.7))}
+.tip-title{font-size:22px;font-weight:700;letter-spacing:.06em;color:#F4FDFB;text-align:center}
+.tip-sub{margin-top:8px;font-size:12.5px;color:rgba(212,234,231,.55);text-align:center;letter-spacing:.04em}
+.tip-inner{width:100%;margin-top:20px;background:rgba(255,255,255,.075);border:1px solid var(--glass-line);
+  border-radius:28px;box-shadow:var(--shadow);padding:20px 20px 18px;text-align:left;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.tip-glyph{display:inline-block;font-size:10.5px;letter-spacing:.1em;color:#9CF6E6;
+  padding:4px 11px;border-radius:999px;background:rgba(47,224,190,.13);
+  border:1px solid rgba(47,224,190,.26);margin-bottom:14px;font-weight:600}
+#tip-text{font-size:14.5px;line-height:1.95;color:rgba(240,251,249,.94);margin-bottom:20px}
+#tip-close{display:block;margin:0 auto;padding:12px 40px;border-radius:999px;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);
+  color:#9CF6E6;font-size:13.5px;font-weight:600;letter-spacing:.1em;transition:transform .2s,background .2s}
+#tip-close:active{transform:scale(.94);background:rgba(255,255,255,.16)}
+.week{margin-top:24px;width:100%;text-align:center}
+.week-title{font-size:12.5px;letter-spacing:.2em;color:rgba(212,234,231,.55);margin-bottom:13px}
+.week-dots{display:flex;justify-content:center;gap:12px;margin-bottom:14px}
+.week-dots i{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);transition:all .3s}
+.week-dots i.on{background:var(--grad-main);border-color:transparent;
+  box-shadow:0 0 14px rgba(47,224,190,.65)}
+.week-text{font-size:13px;color:rgba(233,248,245,.88);letter-spacing:.04em}
+.week-sub{margin-top:7px;font-size:11.5px;color:rgba(212,234,231,.40);letter-spacing:.06em}
+
+@media (max-height:720px){
+  .greet h1{font-size:22px}
+  .breath-btn{width:min(54vw,200px);height:min(54vw,200px);margin:10px 0 92px}
+  .breath-label{bottom:-84px;padding:13px 38px;font-size:15px}
+  .breath-beat{font-size:44px;min-height:44px}
+  .entry{padding:12px 6px 11px}
+  .week{margin-top:18px}
+}
+
+</style>
+</head>
+<body data-page-node-id="hp4JvCYntx6kQnS739ur2P">
+
+<!--pnid:MWuhr70Z0ymtg7uETKP1TE--><!-- ================= 【新增·场景动态背景】纯 CSS 动效层（播放时显示，息屏暂停） ================= -->
+<div data-page-node-id="XZJgaN7NSxH6u2cBg6eIXE" aria-hidden="true" data-fx="none" id="bg-fx">
+  <div data-page-node-id="Z29MpyUWEF4pRikxX6ZOJL" class="layer fx-rain"></div>
+  <div data-page-node-id="DMYD6cFV8XWsdRsuqGPhbv" class="layer fx-stars"></div>
+  <div data-page-node-id="VUofPm7JaUfvwdaSYfJCkc" class="layer fx-forest"></div>
+  <div data-page-node-id="TiMUAvc7lnsYE8mB4xgaeK" class="layer fx-fire"></div>
+</div>
+
+<!--pnid:YULi0FdG5cv9zvJVVOyEiB--><!-- ================= 首页 ================= -->
+<!-- ================= 首页（v3 深夜疗愈蓝） ================= -->
+<section class="view active" id="view-home">
+  <header class="topbar">
+    <div class="brand">息屏减压</div>
+    <div class="top-icons">
+      <button class="icon-btn" id="btn-history" aria-label="历史记录" type="button">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 2"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="home-main">
+    <div class="greet">
+      <h1 id="greet-title">晚上好</h1>
+      <p>现在，跟着呼吸慢下来</p>
+    </div>
+
+    <!-- 呼吸光晕球：点击 = 播放 / 暂停（沿用原 #breath-btn 绑定） -->
+    <button class="breath-btn breathing" id="breath-btn" aria-label="开始放松" type="button">
+      <span class="orb-rings" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="breath-orb"></span>
+      <span class="breath-text">
+        <span class="breath-phase" id="breath-phase"></span>
+        <span class="breath-beat" id="breath-beat"></span>
+        <span class="breath-label" id="breath-label">开始放松</span>
+      </span>
+    </button>
+
+    <div class="cadence" id="breath-cadence">吸气 4 · 屏息 7 · 呼气 8</div>
+    <div class="status-row">
+      <span class="status-key">今日状态</span>
+      <p class="home-status" id="home-status">轻触气泡，开始放松</p>
+    </div>
+  </main>
+
+  <footer class="home-foot">
+    <!-- 三入口：场景 / 声音 / 压力释放（复用原有 #btn-scenes / #btn-stress 绑定） -->
+    <div class="entry-row">
+      <button class="entry" id="btn-scenes" type="button">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3.2"/><path d="M4.6 16.2l4.6-4.6 3.4 3.4 3-3 3.8 3.8"/><circle cx="9" cy="9.6" r="1.2"/></svg>
+        <span>场景</span>
+      </button>
+      <button class="entry" data-act="sounds" type="button">
+        <svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4.5v15M16 7v10M20 10v4"/></svg>
+        <span>声音</span>
+      </button>
+      <button class="entry" id="btn-stress" type="button">
+        <svg viewBox="0 0 24 24"><path d="M5 19c8.5.8 14-4.2 14-12.5C10.5 6.5 5.2 10.6 5.2 15.4c0 1.4.4 2.6.8 3.1z"/><path d="M5 19l6.6-6.6"/></svg>
+        <span>压力释放</span>
+      </button>
+    </div>
+
+    <!-- 底部导航：仅保留 首页 / 我的（场景与声音入口在上方三卡片中） -->
+    <nav class="tabbar">
+      <span class="tab on">
+        <svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M9.6 21v-6h4.8v6"/></svg>
+        首页
+      </span>
+      <button class="tab" id="btn-settings" type="button">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8.4" r="3.4"/><path d="M5 20c1.2-3.6 4-5.4 7-5.4s5.8 1.8 7 5.4"/></svg>
+        我的
+      </button>
+    </nav>
+  </footer>
+</section>
+
+<!--pnid:1l4Q2RTDjf1EQJ9bYOp1G4--><!-- ================= 场景选择（覆盖页） ================= -->
+<!-- ================= 场景选择（覆盖页） ================= -->
+<section class="view overlay" id="view-scenes">
+  <header class="ov-head">
+    <button class="icon-btn" data-back aria-label="返回" type="button">
+      <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div class="ov-title">选一个场景</div>
+  </header>
+  <div class="ov-body">
+    <p class="kicker">今晚放松身心 · 选择当下最需要的场景</p>
+
+    <div class="cards-wrap">
+      <button class="cards-arrow prev" id="cards-prev" type="button" aria-label="上一张">‹</button>
+      <div class="cards" id="scene-cards">
+        <div class="card" data-scene="anxiety">
+          <span class="card-flag">播放中</span>
+          <div class="card-art"><span class="card-glyph">雨</span></div>
+          <div class="card-name">焦虑</div>
+          <div class="card-desc">雨声白噪音 + 呼吸引导<br>让急促的心跳慢下来</div>
+          <div class="card-tag">4-7-8 · 呼吸引导</div>
+        </div>
+        <div class="card" data-scene="tired">
+          <span class="card-flag">播放中</span>
+          <div class="card-art"><span class="card-glyph">憩</span></div>
+          <div class="card-name">疲惫</div>
+          <div class="card-desc">纯净白噪音 + 专注模式<br>给透支的大脑放个短假</div>
+          <div class="card-tag">腹式呼吸 · 专注模式</div>
+        </div>
+        <div class="card" data-scene="insomnia">
+          <span class="card-flag">播放中</span>
+          <div class="card-art"><span class="card-glyph">夜</span></div>
+          <div class="card-name">失眠</div>
+          <div class="card-desc">助眠雨夜音效<br>自动定时关闭，安心入睡</div>
+          <div class="card-tag">30 分钟 · 自动停止</div>
+        </div>
+        <div class="card" data-scene="quick">
+          <span class="card-flag">播放中</span>
+          <div class="card-art"><span class="card-glyph">息</span></div>
+          <div class="card-name">5分钟快速呼吸</div>
+          <div class="card-desc">工作间隙 5 分钟快速回血<br>静音模式，只有呼吸引导动画</div>
+          <div class="card-tag">5 分钟 · 静音</div>
+        </div>
+      </div>
+      <button class="cards-arrow next" id="cards-next" type="button" aria-label="下一张">›</button>
+      <div class="cards-dots" id="cards-dots"></div>
+    </div>
+
+    <!-- 调音台：自定义组合 + 独立音量（沿用原 #source-chips / #sound-vols 渲染） -->
+    <div class="mixer-card">
+      <div class="mixer-head">
+        <h2>调出你的声音</h2>
+        <p>最多同时播放 2 种</p>
+      </div>
+      <div class="sec-title">自定义组合</div>
+      <div class="chips" id="source-chips"></div>
+      <div class="sec-title">音量微调</div>
+      <div id="sound-vols"></div>
+      <p class="timer-tip">环境音最多同时选择 2 种，可分别拖动滑条独立调节音量；改动自动保存。</p>
+    </div>
+
+    <div class="panel">
+      <div class="sec-title">呼吸模式</div>
+      <div class="chips" id="breath-chips"></div>
+      <p class="timer-tip" id="breath-tip">切换场景会自动匹配默认呼吸模式，也可以随时手动更换。</p>
+    </div>
+
+    <div class="panel">
+      <div class="sec-title">动态背景</div>
+      <div class="chips" id="bg-chips"></div>
+      <p class="timer-tip">仅在音频播放时显示；息屏或切到后台时动画自动暂停，声音继续。</p>
+    </div>
+
+    <div class="panel">
+      <div class="sec-title">定时关闭</div>
+      <div class="chips" id="timer-chips"></div>
+      <p class="timer-tip" id="timer-tip">时间到自动停止播放，不打扰你入睡。</p>
+    </div>
+  </div>
+</section>
+
+<!--pnid:bE83I6lVYAbQ8PytE5eFhW--><!-- ================= 设置（覆盖页） ================= -->
+<section data-page-node-id="Rfm0cE1cPlcxnrYJlYxSOa" class="view overlay" id="view-settings">
+  <header data-page-node-id="nRjBz3ZZnzC9pdyOp2UtNi" class="ov-head">
+    <button data-page-node-id="srg3PLwMS5RJE6kUwkruIs" aria-label="返回" class="icon-btn" data-back>
+      <svg data-page-node-id="SaNIRPLmjdBm7GUi3K0BjV" viewBox="0 0 24 24"><path data-page-node-id="7VXHB0NqdLGEQyEv2caK2Y" d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div data-page-node-id="Vyw2IEnarGwRhI5aS0lPwH" class="ov-title"><!--pnid:uoEznvpejqPZAKLz79EFW4-->设置</div>
+  </header>
+  <div data-page-node-id="DKjDTiLA95v6HCF3CPLRyq" class="ov-body">
+    <div data-page-node-id="eSpLDUD7juKnuSoZIQwWnS" class="set-row">
+      <div data-page-node-id="6dY3HGuGfe2CGeiXRyGotG" class="set-label"><!--pnid:gTpXrvZU1Ze10d8RJAvoQ7-->音量<small data-page-node-id="YDCnWT4ufZJdSXKIA3THCB"><!--pnid:BU9twlgmFr8KM09uFOWaQ9-->调节所有音频的输出音量</small></div>
+      <input data-page-node-id="vyP8lvJJOyvX0UKFWiXXxV" id="volume-range" max="100" min="0" type="range" value="70">
+    </div>
+    <!--pnid:ZuF2mTzlQfm273W6UeTFAu--><!-- 【音频系统升级】音效试听：单独试听每段背景音，不影响主播放状态 -->
+    <!--pnid:NT4KGf6Awcka8nnXpAp1TC--><!-- 【新增·折叠面板】标题卡片：默认折叠，点击展开/收起下方音效试听列表；箭头指示状态，状态持久化 -->
+    <div data-page-node-id="fS3n7gPrdsPK3bVA1vW9lw" aria-controls="preview-collapse" aria-expanded="false" class="set-row pv-toggle" id="preview-toggle" role="button" tabindex="0">
+      <div data-page-node-id="KpIEASBy8xbNQpD0PPstuO" class="set-label"><!--pnid:sD3nQ9Ijba1YsxNz3HLCec-->音效试听<small data-page-node-id="i03wp5fIqjiiWnJKO4agZG" id="pv-toggle-tip"><!--pnid:M8gLyqBkBrHQrsFkqbOlGz-->点击展开试听各类背景音效</small></div>
+      <span data-page-node-id="tW1fBLrA9blP5J3IWr12Vt" aria-hidden="true" class="pv-arrow" id="preview-arrow">
+        <svg data-page-node-id="Thksmt7XAePGlwKeE0iglh" viewBox="0 0 24 24"><path data-page-node-id="MRRKQTNe4Q4Uvien0GriNe" d="M6 9l6 6 6-6"/></svg>
+      </span>
+    </div>
+    <!--pnid:g1hmVBsp4XOwcBsStty1L1--><!-- 【新增·折叠面板】平滑展开容器：包裹原有音效试听列表（试听按钮与播放/停止逻辑不变） -->
+    <div data-page-node-id="5Z8y4CYApIzndBCEn22j7U" class="preview-collapse" id="preview-collapse">
+      <div data-page-node-id="BPVu9vlr7mNMzMWCyqMFJZ" class="preview-list" id="preview-list"></div>
+    </div>
+    <div data-page-node-id="2M8Hk6r3jfLMrKO5wUHadL" class="set-row">
+      <div data-page-node-id="ZKrncrKpx2Yh1wrm1bQEoM" class="set-label"><!--pnid:EQdquHUmUN4699Y8vILmSr-->呼吸动画<small data-page-node-id="LA9ASuDON2OBKMYSidEMEG"><!--pnid:8mgzTYmjwfo2iTIVyo7ANh-->关闭后首页气泡保持静止</small></div>
+      <label data-page-node-id="ueQ7fF9ZjIozrGEQ8IqD7T" class="switch"><input data-page-node-id="jtiHpt98Y8A3NYzL8d0l4r" checked id="breath-switch" type="checkbox"><i data-page-node-id="wqsgULToUcpWD4idJctbNU"></i></label>
+    </div>
+    <!--pnid:4VtYVWfPuhu9Q20wKHPUfS--><!-- 【新增·多模式呼吸】动画形态二选一：圆形缩放 / 波浪流动 -->
+    <div data-page-node-id="2gfXiHNGODowURDRt3xjhD" class="set-row">
+      <div data-page-node-id="tgqiboaFOrorHsV9TRSpDo" class="set-label"><!--pnid:52ehoKQnBSonWG3FQGlt8X-->动画形态<small data-page-node-id="ztOgEIVZ8GbVhEbj3v0sNz"><!--pnid:EXGlYMka8OX0lOo0lX6E9v-->圆形缩放 / 波浪流动</small></div>
+      <div data-page-node-id="VV1XQ0JaDi6XMPWZUb2Smx" class="seg" id="anim-seg">
+        <button data-page-node-id="R9n9OLdc4LdreclGwl4l55" class="chip" data-anim="circle" type="button"><!--pnid:cymgxALnInBj8XtfsDq7en-->圆形</button>
+        <button data-page-node-id="MbHoieIrE4E5XTH2EQkz7t" class="chip" data-anim="wave" type="button"><!--pnid:F9v1YqnATrvr79OytmbYnM-->波浪</button>
+      </div>
+    </div>
+    <!--pnid:qIkiHUIo9rk1q3PFh4TkcJ--><!-- 【新增·多模式呼吸】震动提示：呼吸阶段切换时震动，不用紧盯屏幕 -->
+    <div data-page-node-id="Bhy7mGd2QJrAdoQYEfk9rp" class="set-row">
+      <div data-page-node-id="wU80VPnofmMWLETzd6HEqp" class="set-label"><!--pnid:GAV5xlEeLGEuCWw5wtcPfg-->震动提示<small data-page-node-id="pR5lXLnfktKobLsjqSSUac"><!--pnid:cI9rEOsYgCkhpMYpEpPQsP-->呼吸阶段切换时震动（需浏览器支持）</small></div>
+      <label data-page-node-id="e5iNAUl5bdX6YTCGHIiNKn" class="switch"><input data-page-node-id="hoD0kUoUgk5FUmy5FHZgIc" id="vibrate-switch" type="checkbox"><i data-page-node-id="fZfKetkdrB9QEDYYpcqHnT"></i></label>
+    </div>
+    <!--pnid:aOX0v4E7D7hGmHeQyTmZrG--><!-- 【新增·黑暗模式】主题切换开关 -->
+    <div data-page-node-id="9DlCiZl5DST6kNpFLPdC4j" class="set-row">
+      <div data-page-node-id="4xHlScsNLPPZpMof9zZ3Yk" class="set-label"><!--pnid:B4UcstghjPmyt97wRVLrWf-->深色模式<small data-page-node-id="eeHWKY7W5fmEV2cMzwDjco"><!--pnid:RKzdJmn4VxAAZ1ILzFQF31-->低明度暗色主题，柔和护眼</small></div>
+      <label data-page-node-id="FJKiCa5tnrMxOMo7eW9lnP" class="switch"><input data-page-node-id="60sZjLw8cD43wGWgMcUaIz" id="theme-switch" type="checkbox"><i data-page-node-id="9f2cNRgJmkb3NQut4CHYAH"></i></label>
+    </div>
+    <div data-page-node-id="6iCK74z22vZ2wMgJlVDqch" class="set-row">
+      <div data-page-node-id="MoOXjOMWhO3ZXvBLNZ19dF" class="set-label"><!--pnid:7KuUXE6iLnz3mPEgSJzC0M-->清除历史记录<small data-page-node-id="xfFfBnUua01qGzZ2jgurqx"><!--pnid:fUDovGJQsT52Vrg7WTY4bH-->删除本机保存的所有放松记录</small></div>
+      <button data-page-node-id="9iVeehUbjY4u9jQBsjnVKS" class="danger-btn" id="clear-history"><!--pnid:D4RGpy4U1RlYUIHU22zRGb-->清除</button>
+    </div>
+    <p data-page-node-id="sXmnDkmgRUNF2Q3SF54S6n" class="ver-note"><!--pnid:Am94f2fdc7SdR9fhiCIbFY-->息屏减压 · 初版原型 v0.1<br data-page-node-id="dQGFA7h74cyOZptMD12fVB"><!--pnid:xlma1OfncCTdJol4mCuATQ-->全部数据仅存储于本机浏览器</p>
+  </div>
+</section>
+
+<!--pnid:HqT6vKod7uM752Ozc3iGN4--><!-- ================= 历史记录（覆盖页） ================= -->
+<section data-page-node-id="fnmcA62SY6Pfv29T1ZzGt8" class="view overlay" id="view-history">
+  <header data-page-node-id="TAFDvSMD4xEtWxLNFsSA1U" class="ov-head">
+    <button data-page-node-id="lelAizIPZXVGMbn8V3Hg0Q" aria-label="返回" class="icon-btn" data-back>
+      <svg data-page-node-id="oZhZNK0mHLzGqunkGhlHET" viewBox="0 0 24 24"><path data-page-node-id="HveRWmBzWD94A60xWOmJ8P" d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div data-page-node-id="3ntq8Rl9XGB4NXvoAvyb3l" class="ov-title"><!--pnid:VMeViP0yLio6cZJGZFJ6iD-->历史记录</div>
+  </header>
+  <div data-page-node-id="sJHVlm8GnVgvzpcYFImWzv" class="ov-body" id="history-list"></div>
+</section>
+
+<!--pnid:nNH7tTAgxL8Y9SXkYg9ttL--><!-- ================= 【新增·压力释放】覆盖页：3 项轻量练习（全内存，零持久化） ================= -->
+<!-- ================= 压力释放（覆盖页） ================= -->
+<section class="view overlay" id="view-stress">
+  <header class="ov-head">
+    <button class="icon-btn" id="stress-back" aria-label="返回" type="button">
+      <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div class="ov-title">压力释放</div>
+  </header>
+  <!-- 5 段进度线：勾选哪一步，对应线段点亮（纯 CSS，无脚本） -->
+  <div class="stress-prog" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="ov-body">
+    <p class="stress-intro">两个小练习，挑一个顺手的，一两分钟就好。不记录、不评判，用完即走。</p>
+
+    <div class="ex-card ground-card">
+      <div class="ex-head">5-4-3-2-1 感官接地<span class="ex-tag">急性焦虑急救</span></div>
+      <p class="ex-desc">觉得慌、喘不过气的时候，用这个练习把注意力从脑海里的灾难片拉回此时此刻。在心里默念就可以。</p>
+
+      <label class="ex-step chk">
+        <input type="checkbox" id="gs1">
+        <span class="ex-num"><b>5</b></span>
+        <span class="ex-txt"><b>看</b>：说出你看到的 5 样东西<br><span class="ex-dim">一盏灯、一盆绿植、自己的手、窗外的云……</span></span>
+      </label>
+      <label class="ex-step chk">
+        <input type="checkbox" id="gs2">
+        <span class="ex-num"><b>4</b></span>
+        <span class="ex-txt"><b>摸</b>：感受你触到的 4 样东西<br><span class="ex-dim">衣服的布料、椅子的支撑、桌面的温度、手机边缘</span></span>
+      </label>
+      <label class="ex-step chk">
+        <input type="checkbox" id="gs3">
+        <span class="ex-num"><b>3</b></span>
+        <span class="ex-txt"><b>听</b>：分辨你听到的 3 种声音<br><span class="ex-dim">键盘声、空调低鸣、远处车流</span></span>
+      </label>
+      <label class="ex-step chk">
+        <input type="checkbox" id="gs4">
+        <span class="ex-num"><b>2</b></span>
+        <span class="ex-txt"><b>闻</b>：留意你闻到的 2 种气味<br><span class="ex-dim">空气的味道、手边咖啡或茶的气息</span></span>
+      </label>
+      <label class="ex-step chk">
+        <input type="checkbox" id="gs5">
+        <span class="ex-num"><b>1</b></span>
+        <span class="ex-txt"><b>尝</b>：感受你嘴里的 1 种味道<br><span class="ex-dim">喝口水，留意它划过喉咙的感觉</span></span>
+      </label>
+
+      <p class="step-count">已勾选 <b></b> / 5</p>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-head">身体释放<span class="ex-tag">工位 · 通勤可用</span></div>
+      <p class="ex-desc">情绪会住在身体里，动一动就放它出去。每组重复 3~5 次。</p>
+      <div class="ex-move"><span class="ex-pulse"></span><div><b>握拳 · 放松</b><br><span class="ex-dim">双手用力握拳 5 秒，然后突然松开——留意那股从掌心散开的暖流和松垮感。</span></div></div>
+      <div class="ex-move"><span class="ex-bars"><i></i><i></i><i></i><i></i></span><div><b>肩颈舒展</b><br><span class="ex-dim">吸气时耸肩贴向耳朵，呼气时彻底沉肩下落。像把背了一天的包袱放下来。</span></div></div>
+      <div class="ex-move"><span class="ex-pulse" style="animation-duration:4s"></span><div><b>下颌放松</b><br><span class="ex-dim">上下牙轻轻分开，舌尖落在下齿后。很多人焦虑时会不知不觉咬紧牙关。</span></div></div>
+      <div class="ex-move"><span class="ex-bars"><i></i><i></i><i></i></span><div><b>眼部放松</b><br><span class="ex-dim">掌心搓热，扣住双眼 10 秒；或望向 6 米外的地方，待够 20 秒。</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!--pnid:YcB7fLCN3CsC2qJPm05pks--><!-- ================= 【新增·减压知识小卡片】练习结束后随机展示一条，可手动关闭 ================= -->
+<!-- ================= 练习完成 + 今日小知识 + 本周足迹 ================= -->
+<div id="tip-card">
+  <div class="tip-wrap">
+    <div class="tip-badge"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>
+    <h2 class="tip-title">本次练习完成</h2>
+    <p class="tip-sub">刚刚的几分钟，已经安静地留在身体里</p>
+
+    <div class="tip-inner">
+      <div class="tip-glyph">今日小知识</div>
+      <p id="tip-text"></p>
+      <button id="tip-close" type="button">收好了</button>
+    </div>
+
+    <div class="week">
+      <div class="week-title">本周足迹</div>
+      <div class="week-dots" id="week-dots"></div>
+      <p class="week-text" id="week-text">本周陪伴了自己 0 次</p>
+      <p class="week-sub">不赶进度，只要在，就很好</p>
+    </div>
+  </div>
+</div>
+
+<!--pnid:H3txWsFoUEO9SQOUjyGKXJ--><!-- 轻提示（非弹窗） -->
+<div data-page-node-id="xP0sYPYftqRsZriBALosK3" id="toast"></div>
+
+<!--pnid:5KqfR6kvFlF4Sts7MdPfNM--><!-- 自动播放引导层：浏览器自动播放策略所需的唯一一次轻触 -->
+<div data-page-node-id="gWcxrqNlsfcqd077GwM3GJ" id="gate"><div data-page-node-id="D7wTbQTgxXI5FOwGtRYdE6" class="gate-inner"><div data-page-node-id="QrUS5Z76UiyURSQOTOhlPA" class="gate-dot"></div><p data-page-node-id="ArBSJqEJXA15GvW4t3UFBz"><!--pnid:xVLfM8f5SqpG5EfzxiO66q-->轻触屏幕，继续放松</p></div></div>
+
+<script data-page-node-id="9wQs9mAA38TcVC4BY6CfuE" data-pnid-children="6GrYHexqc9e4OuwZ3FbsHR">
+(function(){
+'use strict';
+/* ============================================================
+ * 1. 常量与全局状态
+ * ========================================================== */
+var LS_KEY = 'xiping_state_v1';   // localStorage 键名
+
+/* ============================================================
+ * 【音频系统升级】音效库：在线真实录音（主通道）+ 程序合成（回退通道）
+ *   url  = 公开免费音频直链（raw.githubusercontent.com，CORS 开放、支持 Range）
+ *          素材来源：GitHub 公开仓库 CreativeMD/AmbientSounds（氛围音素材库）、
+ *          CS42org/nature-sounds（自然声景合集）。原型演示使用；
+ *          正式上线建议替换为 CC0 / 已授权音源。
+ *   norm = 音量标准化系数：按实测 RMS 统一到约 -30dB、峰值限制 0.85 计算，
+ *          消除不同素材间的响度差距，叠加播放时不会忽大忽小。
+ *   amb  = true 表示环境音：最多同时播放 2 种，可分别独立调节音量；
+ *          无 url 的项（白噪音/棕噪音/风铃/专注音/呼吸引导）继续程序合成：
+ *          更干净、无缝循环，且不受网络影响。
+ * ========================================================== */
+var SOUND_BASE_A = 'https://raw.githubusercontent.com/CreativeMD/AmbientSounds/master/src/main/resources/assets/ambientsounds/sounds/';
+var SOUND_BASE_N = 'https://raw.githubusercontent.com/CS42org/nature-sounds/main/Sounds/';
+var SOURCES = {
+  /* ---- 焦虑场景 ---- */
+  rain:        {name:'雨声',     level:0.85, amb:true, url:SOUND_BASE_A+'weather/rain1.ogg',         norm:1.45},
+  forestRain:  {name:'林间细雨', level:0.85, amb:true, url:SOUND_BASE_A+'weather/rain2.ogg',         norm:2.41},
+  stream:      {name:'溪流声',   level:0.80, amb:true, url:SOUND_BASE_N+'05_stream/13.mp3',          norm:3.70},
+  /* ---- 疲惫场景 ---- */
+  white:       {name:'白噪音',   level:0.75, amb:true},
+  brown:       {name:'棕噪音',   level:0.80, amb:true},
+  breeze:      {name:'林间风',   level:0.75, amb:true, url:SOUND_BASE_A+'wind/wind-in-leaves.ogg',   norm:0.44},
+  oceanDistant:{name:'远处海浪', level:0.80, amb:true, url:SOUND_BASE_A+'water/beach.ogg',           norm:0.67},
+  /* ---- 失眠场景 ---- */
+  night:       {name:'雨夜氛围', level:0.90, amb:true, url:SOUND_BASE_A+'weather/storm-away.ogg',    norm:1.02},
+  campfire:    {name:'篝火',     level:0.75, amb:true, url:SOUND_BASE_N+'06_campfire/5.mp3',         norm:0.62},
+  deepSea:     {name:'深海低频', level:0.75, amb:true, url:SOUND_BASE_A+'water/underwater-deep.ogg', norm:0.81},
+  /* ---- 其他环境音 ---- */
+  wind:        {name:'风声',     level:0.65, amb:true, url:SOUND_BASE_A+'wind/light-wind2.ogg',      norm:6.38},
+  waves:       {name:'海浪',     level:0.85, amb:true, url:SOUND_BASE_A+'water/ocean.ogg',           norm:1.83},
+  /* ---- 功能音（不计入 2 种环境音上限，继续程序合成） ---- */
+  chime:       {name:'风铃',     level:0.50},
+  focus:       {name:'专注音',   level:0.45},
+  guide:       {name:'呼吸引导', level:0.50}  // guide 由呼吸控制器实时驱动，非常驻节点
+};
+/* 自定义组合 chips 的展示顺序（按场景归类，便于查找） */
+var CUSTOM_ORDER = ['rain','forestRain','stream','white','brown','breeze','oceanDistant','night','campfire','deepSea','wind','waves','chime','focus','guide'];
+
+/* 预设场景（含【新增·5分钟快速呼吸】）；breath = 该场景绑定的默认呼吸模式 */
+var SCENES = {
+  anxiety:  {name:'焦虑', sources:['rain','guide'],  timer:0,  breath:'478'},
+  tired:    {name:'疲惫', sources:['white','focus'], timer:0,  breath:'belly'},
+  insomnia: {name:'失眠', sources:['night'],         timer:30, breath:'478'},  // 失眠默认自动定时 30 分钟
+  /* 【新增·5分钟快速呼吸】纯视觉场景：无音频（sources 为空）、仅呼吸动画 + 5 分钟倒计时 */
+  quick:    {name:'快速呼吸', sources:[], timer:5, breath:'478'}
+};
+var TIMER_OPTIONS = [0,10,20,30,60];  // 分钟，0=关闭
+
+/* ============================================================
+ * 【新增·多模式呼吸】4 套呼吸节奏
+ *   478   经典 4-7-8：快速平复紧张
+ *   box   箱式呼吸：吸4-屏4-呼4-屏4，稳定心绪
+ *   belly 腹式呼吸：吸4-呼8，深度放松
+ *   active 短促激活：吸2-呼1 快循环，提神醒脑
+ * ========================================================== */
+var BREATH_PATTERNS = {
+  '478':  {name:'4-7-8 呼吸', phases:[{name:'吸气',dur:4},{name:'屏息',dur:7},{name:'呼气',dur:8}]},
+  box:    {name:'箱式呼吸',   phases:[{name:'吸气',dur:4},{name:'屏息',dur:4},{name:'呼气',dur:4},{name:'屏息',dur:4}]},
+  belly:  {name:'腹式呼吸',   phases:[{name:'吸气',dur:4},{name:'呼气',dur:8}]},
+  active: {name:'短促激活',   phases:[{name:'吸气',dur:2},{name:'呼气',dur:1}]}
+};
+var BREATH_ORDER = ['478','box','belly','active'];
+function patternCycle(p){ return p.phases.reduce(function(s,ph){ return s+ph.dur; }, 0); }
+
+var defaultState = {
+  scene:'anxiety',
+  sources:['rain','guide'],
+  timerMin:0,
+  volume:0.7,
+  vols:{},                /* 【音频系统升级】各音效独立音量 {id:0~1}，未设置时用该音效默认 level */
+  breathing:true,
+  theme:'light',           /* 【新增·黑暗模式】'light' | 'dark'，localStorage 持久化 */
+  breathMode:'478',        /* 【新增·多模式呼吸】当前呼吸模式：478/box/belly/active */
+  animType:'circle',       /* 【新增·多模式呼吸】动画形态：'circle' 圆形缩放 | 'wave' 波浪流动 */
+  vibrate:false,           /* 【新增·多模式呼吸】呼吸阶段切换时震动提示 */
+  bgFx:'auto',             /* 【新增·动态背景】'auto' 跟随场景 | rain/stars/forest/fire | 'off' */
+  pvCollapsed:true,        /* 【新增·折叠面板】音效试听列表折叠状态：true=收起(默认) | false=展开，localStorage 持久化 */
+  playing:false,
+  wasPlaying:false,
+  history:[]
+};
+var state = loadState();
+/* 进入界面时 UI 一律先回到暂停态（气泡静止），能否自动播放由 attemptAutoPlay 的结果决定，
+   避免出现“看起来在放、实际没声”的假播放状态 */
+state.playing = false;
+var playStartTs = 0;          // 本次播放开始时间戳（用于历史时长统计）
+var remainSec = 0;            // 定时剩余秒数
+var timerInt = null;
+
+function loadState(){
+  try{
+    var raw = localStorage.getItem(LS_KEY);
+    if(raw){ var s = JSON.parse(raw); var out = {}; for(var k in defaultState) out[k]=defaultState[k];
+      for(var k2 in s) if(s[k2]!==undefined && s[k2]!==null) out[k2]=s[k2];
+      return out; }
+  }catch(e){}
+  var d = {}; for(var k3 in defaultState) d[k3]=defaultState[k3]; return d;
+}
+function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){} }
+
+/* ============================================================
+ * 【新增·黑暗模式】主题应用：把主题写到 <html data-theme>，
+ * CSS 变量体系自动切换全部组件配色；同步更新 theme-color。
+ * ========================================================== */
+function applyTheme(){
+  document.documentElement.dataset.theme = (state.theme === 'dark') ? 'dark' : 'light';
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content', state.theme === 'dark' ? '#050E1A' : '#0A1F33');
+}
+
+/* ============================================================
+ * 2. 音频引擎（Web Audio API）
+ *    【音频系统升级】本次改造点：
+ *    1) 在线录音优先：环境音通过 fetch 拉取直链 → decodeAudioData → 循环播放，
+ *       下载失败 / 解码失败自动回退程序合成音，任何情况下都有声音；
+ *    2) 平滑淡入淡出：开始 / 停止 / 切换 / 调音量全部走 gain 渐变，
+ *       消除突兀爆音与咔哒截断声；
+ *    3) 音量标准化：norm 系数统一各素材响度；两种环境音叠加时按 1/√n 补偿，
+ *       叠加不忽大忽小；
+ *    4) 独立音量：每个环境音可单独调节（state.vols，localStorage 持久化）；
+ *    5) 息屏后台播放逻辑不变（AudioContext 持续输出 + Media Session 控制）。
+ * ========================================================== */
+var AudioEngine = (function(){
+  var ctx=null, master=null, comp=null;
+  var nodes = new Map();       // 常驻音源 id -> {out:GainNode, stop()}
+  var bufCache = {};           // 【音频系统升级】已解码音频缓存 id -> AudioBuffer（避免重复下载）
+  var loadingIds = {};         // 【音频系统升级】正在下载/解码的音效 id -> true
+  var guideStop = null;        // 呼吸引导音的停止函数
+  var chimeTimer = null;       // 风铃调度器
+
+  function ensure(){
+    if(ctx) return ctx;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    ctx = new AC();
+    comp = ctx.createDynamicsCompressor();          // 防止多层叠加爆音
+    master = ctx.createGain();
+    master.gain.value = state.volume;
+    comp.connect(master); master.connect(ctx.destination);
+    return ctx;
+  }
+  function running(){ return ctx && ctx.state === 'running'; }
+  function resume(){ ensure(); if(ctx.state === 'suspended') return ctx.resume(); return Promise.resolve(); }
+
+  /* ---- 噪音缓冲区：white / brown / pink（3 秒循环） ---- */
+  function noiseBuffer(kind){
+    var len = ctx.sampleRate * 3, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0), i;
+    if(kind === 'white'){ for(i=0;i<len;i++) d[i] = Math.random()*2-1; }
+    else if(kind === 'brown'){ var last=0; for(i=0;i<len;i++){ var w=Math.random()*2-1; last=(last+0.02*w)/1.02; d[i]=last*3.5; } }
+    else { /* pink：Paul Kellet 近似滤波，比白噪音更柔 */
+      var b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+      for(i=0;i<len;i++){ var w2=Math.random()*2-1;
+        b0=0.99886*b0+w2*0.0555179; b1=0.99332*b1+w2*0.0750759; b2=0.96900*b2+w2*0.1538520;
+        b3=0.86650*b3+w2*0.3104856; b4=0.55000*b4+w2*0.5329522; b5=-0.7616*b5-w2*0.0168980;
+        d[i]=(b0+b1+b2+b3+b4+b5+b6+w2*0.5362)*0.11; b6=w2*0.115926; }
+    }
+    return buf;
+  }
+  function osc(freq, type){ var o = ctx.createOscillator(); o.type = type||'sine'; o.frequency.value = freq; return o; }
+  function g(v){ var n = ctx.createGain(); n.gain.value = v; return n; }
+
+  /* ============================================================
+   * 【音频系统升级】在线音频加载：fetch 直链 → decodeAudioData → 缓存
+   *   成功返回 Promise<AudioBuffer>；网络失败 / 403 / 解码失败则 reject，
+   *   由调用方回退到程序合成音，保证任何网络环境下都有声音。
+   * ========================================================== */
+  /* ============================================================
+   * 【新增·AbortController超时】在线音频加载超时控制
+   *   AUDIO_LOAD_TIMEOUT = 8000ms：请求发起后 8 秒内未能完成下载，
+   *   立即 abort 终止本次网络请求（不再继续转圈等待），随后由调用方
+   *   (buildUrlNode 的 catch) 自动回退到程序合成音作为备用音源。
+   *   AbortController 在 成功 / 失败 / 超时 三条出口都会释放
+   *   （清定时器 + abort 残留请求），避免请求悬挂占用连接资源。
+   *   加载状态提示（loadingIds / "加载中…" / toast）逻辑不变。
+   * ========================================================== */
+  var AUDIO_LOAD_TIMEOUT = 8000;
+  function loadBuffer(id){
+    if(bufCache[id]) return Promise.resolve(bufCache[id]);
+    var url = SOURCES[id] && SOURCES[id].url;
+    if(!url) return Promise.reject(new Error('no url'));
+    loadingIds[id] = true;
+    /* ---------- 【新增·AbortController超时】创建控制器 + 8 秒超时定时器 ---------- */
+    var ac = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    var timer = ac ? setTimeout(function(){
+      ac.abort();                               // 8 秒未加载完成 → 立刻终止本次网络请求
+    }, AUDIO_LOAD_TIMEOUT) : null;
+    /* 统一释放：清定时器并 abort（已完成的请求再 abort 无副作用），防止残留请求 */
+    function release(){
+      if(timer){ clearTimeout(timer); timer = null; }
+      if(ac){ try{ ac.abort(); }catch(e){} ac = null; }
+    }
+    return fetch(url, { mode:'cors', signal: ac ? ac.signal : undefined })
+      .then(function(r){ if(!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); })
+      .then(function(ab){
+        return new Promise(function(res, rej){
+          var p = ctx.decodeAudioData(ab, res, rej);
+          if(p && p.then) p.then(res, rej);      // 兼容返回 Promise 风格的实现
+        });
+      })
+      .then(function(buf){ bufCache[id] = buf; delete loadingIds[id]; release(); return buf; })
+      .catch(function(e){ delete loadingIds[id]; release(); throw e; });   // 超时/失败同样释放，交由上层回退合成音
+  }
+  function isLoading(id){ return !!loadingIds[id]; }
+
+  /* ---- 当前实际在播的环境音数量（混音响度补偿用） ---- */
+  function activeAmbCount(){
+    var n = 0;
+    nodes.forEach(function(_, id){ if(SOURCES[id] && SOURCES[id].amb) n++; });
+    return n;
+  }
+  /* ---- 单音效实际增益 = 用户音量 × 标准化系数(仅在线录音) × 混音补偿(仅环境音) ---- */
+  function effLevel(id){
+    var s = SOURCES[id]; if(!s) return 0;
+    var v = (state.vols && state.vols[id] !== undefined) ? state.vols[id] : s.level;
+    if(!s.amb) return v;                                // 功能音不参与混音补偿
+    var n = s.url ? (s.norm || 1) : 1;                  // 标准化系数只作用于在线录音
+    return v * n / Math.sqrt(Math.max(1, activeAmbCount()));
+  }
+  /* ---- 重新计算所有在播音效增益（叠加/移除/调音量后调用，平滑过渡不爆音） ---- */
+  function refreshLevels(){
+    nodes.forEach(function(entry, id){
+      if(entry.loading) return;                    // 在线音效加载中：等加载完由 fadeIn 淡入
+      var t = ctx.currentTime, cur = entry.out.gain.value;
+      var dur = cur < 0.001 ? 0.8 : 0.25;          // 新节点淡入 0.8s，在位节点微调 0.25s
+      entry.out.gain.cancelScheduledValues(t);
+      entry.out.gain.setValueAtTime(cur, t);
+      entry.out.gain.linearRampToValueAtTime(effLevel(id), t + dur);
+    });
+  }
+  /* ---- 调节单个音效音量（场景页滑条，localStorage 持久化） ---- */
+  function setSoundVolume(id, v){
+    state.vols[id] = v; save();
+    var entry = nodes.get(id);
+    if(!entry) return;
+    var t = ctx.currentTime;
+    entry.out.gain.cancelScheduledValues(t);
+    entry.out.gain.setValueAtTime(entry.out.gain.value, t);
+    entry.out.gain.linearRampToValueAtTime(effLevel(id), t + 0.15);
+  }
+
+  /* ---- 程序合成器：把各音源的合成节点连接到指定 out（功能音与在线回退共用） ---- */
+  function wireSynth(id, out, stops){
+    function noise(kind){
+      var s = ctx.createBufferSource(); s.buffer = noiseBuffer(kind); s.loop = true;
+      stops.push(function(){ try{ s.stop(); }catch(e){} s.disconnect(); });
+      return s;
+    }
+    if(id === 'white' || id === 'brown'){
+      var s = noise(id); s.connect(out); s.start();
+    }
+    else if(id === 'rain'){
+      /* 雨声 = 高频沙沙层 + 中频雨点层 + 缓慢起伏 LFO */
+      var s1 = noise('white'), hp = ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=2400;
+      var g1 = g(0.09); s1.connect(hp); hp.connect(g1); g1.connect(out);
+      var s2 = noise('pink'), bp = ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=900; bp.Q.value=0.5;
+      var g2 = g(0.34); s2.connect(bp); bp.connect(g2); g2.connect(out);
+      var lfo = osc(0.12), lg = g(380); lfo.connect(lg); lg.connect(bp.frequency); lfo.start(); stops.push(function(){ try{lfo.stop();}catch(e){} });
+      var lfo2 = osc(0.09), lg2 = g(0.07); lfo2.connect(lg2); lg2.connect(g2.gain); lfo2.start(); stops.push(function(){ try{lfo2.stop();}catch(e){} });
+      s1.start(); s2.start();
+    }
+    else if(id === 'night'){
+      /* 雨夜 = 雨声 + 远处低频轰鸣（在线版为远处雷雨录音，此处为回退合成） */
+      wireSynth('rain', out, stops);
+      var rb = noise('brown'), lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=90;
+      var rg = g(0.5); rb.connect(lp); lp.connect(rg); rg.connect(out); rb.start();
+      var rl = osc(0.05), rlg = g(0.22); rl.connect(rlg); rlg.connect(rg.gain); rl.start(); stops.push(function(){ try{rl.stop();}catch(e){} });
+    }
+    else if(id === 'waves'){
+      /* 海浪 = 棕噪音 + 低频滤波缓慢扫频 + 音量涨落 */
+      var wb = noise('brown'), wlp = ctx.createBiquadFilter(); wlp.type='lowpass'; wlp.frequency.value=420; wlp.Q.value=0.4;
+      var wg = g(0.7); wb.connect(wlp); wlp.connect(wg); wg.connect(out); wb.start();
+      var wl = osc(0.07), wlg = g(260); wl.connect(wlg); wlg.connect(wlp.frequency); wl.start(); stops.push(function(){ try{wl.stop();}catch(e){} });
+      var wl2 = osc(0.07), wlg2 = g(0.16); wl2.connect(wlg2); wlg2.connect(wg.gain); wl2.start(); stops.push(function(){ try{wl2.stop();}catch(e){} });
+    }
+    else if(id === 'wind'){
+      /* 风声 = 白噪音 + 低通 + 双 LFO */
+      var wb2 = noise('white'), wlp2 = ctx.createBiquadFilter(); wlp2.type='lowpass'; wlp2.frequency.value=320; wlp2.Q.value=0.5;
+      var wg2 = g(0.55); wb2.connect(wlp2); wlp2.connect(wg2); wg2.connect(out); wb2.start();
+      var wl3 = osc(0.10), wlg3 = g(180); wl3.connect(wlg3); wlg3.connect(wlp2.frequency); wl3.start(); stops.push(function(){ try{wl3.stop();}catch(e){} });
+      var wl4 = osc(0.13), wlg4 = g(0.14); wl4.connect(wlg4); wlg4.connect(wg2.gain); wl4.start(); stops.push(function(){ try{wl4.stop();}catch(e){} });
+    }
+    else if(id === 'chime'){
+      /* 风铃 = 五声音阶随机风铃叮咚 */
+      var notes = [392,440,523.25,587.33,659.25,783.99,880];
+      function pluck(){
+        if(!ctx) return;
+        var t = ctx.currentTime + 0.02, f = notes[(Math.random()*notes.length)|0];
+        [1,2].forEach(function(mul, i){
+          var o = osc(f*mul*(1+(Math.random()-0.5)*0.004)), pg = g(0.0001);
+          var peak = i===0 ? 0.05 : 0.018, dur = 2.4 + Math.random()*1.8;
+          pg.gain.setValueAtTime(0.0001, t);
+          pg.gain.exponentialRampToValueAtTime(peak, t + 0.02 + dur*0.08);
+          pg.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+          o.connect(pg); pg.connect(out); o.start(t); o.stop(t + dur + 0.05);
+        });
+      }
+      chimeTimer = setInterval(function(){ if(state.playing && Math.random() < 0.8) pluck(); }, 3000);
+      stops.push(function(){ if(chimeTimer){ clearInterval(chimeTimer); chimeTimer = null; } });
+    }
+    else if(id === 'focus'){
+      /* 专注音 = 低频基音 + 轻微 10Hz 起伏（帮助集中注意力） */
+      var f1 = osc(174), fg = g(0.035); f1.connect(fg); fg.connect(out); f1.start(); stops.push(function(){ try{f1.stop();}catch(e){} });
+      var f2 = osc(261.63), fg2 = g(0.012); f2.connect(fg2); fg2.connect(out); f2.start(); stops.push(function(){ try{f2.stop();}catch(e){} });
+      var fl = osc(10), flg = g(0.018); fl.connect(flg); flg.connect(fg.gain); fl.start(); stops.push(function(){ try{fl.stop();}catch(e){} });
+    }
+    /* ---------- 【新增·AbortController超时】通用合成回退分支 ----------
+       林间细雨 / 溪流声 / 林间风 / 远处海浪 / 篝火 / 深海低频 此前没有合成分支，
+       一旦超时（或加载失败）回退会落入静默；这里为它们补上最接近的合成纹理，
+       保证任何音源超时后都能切换到合成音频，用户不会面对无声等待。
+       仅作用于回退路径，不影响已适配音源的原有合成效果。 */
+    else if(id === 'forestRain'){ wireSynth('rain', out, stops); }            /* 林间细雨 → 雨声纹理 */
+    else if(id === 'breeze'){ wireSynth('wind', out, stops); }                /* 林间风 → 风声纹理 */
+    else if(id === 'oceanDistant'){ wireSynth('waves', out, stops); }         /* 远处海浪 → 海浪纹理 */
+    else if(id === 'stream'){                                                /* 溪流 = 白噪音 + 中高频带通 + 微波澜 */
+      var sb = noise('white'), sbp = ctx.createBiquadFilter(); sbp.type='bandpass'; sbp.frequency.value=1500; sbp.Q.value=0.4;
+      var sg = g(0.5); sb.connect(sbp); sbp.connect(sg); sg.connect(out); sb.start();
+      var sl = osc(0.23), slg = g(500); sl.connect(slg); slg.connect(sbp.frequency); sl.start(); stops.push(function(){ try{sl.stop();}catch(e){} });
+    }
+    else if(id === 'campfire' || id === 'deepSea'){                          /* 篝火/深海 = 棕噪音 + 低通 + 慢起伏 */
+      var cb = noise('brown'), clp = ctx.createBiquadFilter();
+      clp.type='lowpass'; clp.frequency.value = (id === 'campfire' ? 500 : 120); clp.Q.value=0.4;
+      var cg = g(id === 'campfire' ? 0.55 : 0.8); cb.connect(clp); clp.connect(cg); cg.connect(out); cb.start();
+      var cl = osc(id === 'campfire' ? 0.4 : 0.06), clg = g(id === 'campfire' ? 0.25 : 0.3);
+      cl.connect(clg); clg.connect(cg.gain); cl.start(); stops.push(function(){ try{cl.stop();}catch(e){} });
+    }
+  }
+
+  /* ============================================================
+   * 【音频系统升级】在线录音节点：异步加载，就绪后淡入；
+   *   下载/解码失败自动回退到程序合成音（wireSynth）。
+   * ========================================================== */
+  function buildUrlNode(id, out, stops, entry){
+    var ref = { cancelled:false };
+    loadBuffer(id).then(function(buf){
+      /* 节点已被切换掉（淡出/停止）则丢弃本次加载结果，避免陈音复响 */
+      if(ref.cancelled || nodes.get(id) !== entry) return;
+      entry.loading = false;
+      var bs = ctx.createBufferSource();
+      bs.buffer = buf; bs.loop = true;
+      bs.connect(out); bs.start();
+      stops.push(function(){ try{ bs.stop(); }catch(e){} try{ bs.disconnect(); }catch(e){} });
+      fadeIn(entry, effLevel(id));               // 加载完成后淡入，避免突然出声
+    }).catch(function(){
+      if(ref.cancelled || nodes.get(id) !== entry) return;
+      entry.loading = false;
+      wireSynth(id, out, stops);                 // 在线资源不可用 → 程序合成回退
+      fadeIn(entry, effLevel(id));
+    });
+    return ref;
+  }
+
+  /* ---- 每种音源一个节点，统一返回 {out, stop, loading} ---- */
+  function build(id){
+    var stops = [];
+    var out = ctx.createGain(); out.gain.value = 0; out.connect(comp);
+    var entry = { out: out, loading: !!SOURCES[id].url, stop: null };
+    var ref = SOURCES[id].url ? buildUrlNode(id, out, stops, entry) : null;
+    if(!SOURCES[id].url) wireSynth(id, out, stops);
+    entry.stop = function(){ if(ref) ref.cancelled = true; stops.forEach(function(f){ f(); }); try{ out.disconnect(); }catch(e){} };
+    return entry;
+  }
+
+  /* ---- 音源切换（带 0.6~0.8s 交叉淡入淡出，避免爆音） ---- */
+  function fadeIn(entry, level){
+    var t = ctx.currentTime;
+    entry.out.gain.cancelScheduledValues(t);
+    entry.out.gain.setValueAtTime(Math.max(0.0001, entry.out.gain.value), t);
+    entry.out.gain.linearRampToValueAtTime(level, t + 0.8);
+  }
+  function fadeOut(id){
+    var entry = nodes.get(id); if(!entry) return;
+    var t = ctx.currentTime;
+    entry.out.gain.cancelScheduledValues(t);
+    entry.out.gain.setValueAtTime(entry.out.gain.value, t);
+    entry.out.gain.linearRampToValueAtTime(0, t + 0.6);
+    nodes.delete(id);
+    setTimeout(function(){ entry.stop(); }, 750);
+  }
+  function setSources(ids){
+    /* 无音源（如快速呼吸场景）：仅淡出全部已有音频，不创建音频上下文 */
+    if(!ids.length){ nodes.forEach(function(_, id){ fadeOut(id); }); return; }
+    ensure();
+    var want = {};
+    ids.forEach(function(id){ if(id !== 'guide') want[id] = true; });
+    nodes.forEach(function(_, id){ if(!want[id]) fadeOut(id); });
+    Object.keys(want).forEach(function(id){
+      if(!nodes.has(id)){
+        var e = build(id);
+        nodes.set(id, e);          // 先入表，effLevel 才能算对混音补偿
+        /* 在线音效由 buildUrlNode 在加载完成后自动淡入；合成音立即淡入 */
+        if(!SOURCES[id].url) fadeIn(e, effLevel(id));
+      }
+    });
+    refreshLevels();                // 叠加数量变化时统一补偿所有在播音效（0.25s 平滑）
+  }
+
+  /* ---- 呼吸引导音：跟随呼吸阶段播放柔和提示音（dur = 该阶段秒数，适配所有呼吸模式） ---- */
+  function guide(phase, dur){
+    if(!ctx) return;
+    if(guideStop) guideStop();
+    dur = dur || 4;
+    var t = ctx.currentTime + 0.05;
+    /* 阶段切换时的轻柔提示音 */
+    var mark = osc(1046.5), mg = g(0.0001);
+    mg.gain.setValueAtTime(0.0001, t); mg.gain.exponentialRampToValueAtTime(0.016, t + 0.03);
+    mg.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+    mark.connect(mg); mg.connect(comp); mark.start(t); mark.stop(t + 0.65);
+    var o = osc(392), gg = g(0.0001); o.connect(gg); gg.connect(comp);
+    if(phase === '吸气'){
+      o.frequency.setValueAtTime(392, t); o.frequency.linearRampToValueAtTime(523.25, t + dur * 0.9);
+      gg.gain.linearRampToValueAtTime(0.05, t + Math.min(0.9, dur * 0.22)); gg.gain.setValueAtTime(0.05, t + dur * 0.85);
+      gg.gain.linearRampToValueAtTime(0, t + dur * 0.95); o.start(t); o.stop(t + dur + 0.1);
+    }else if(phase === '屏息'){
+      o.frequency.value = 523.25;
+      gg.gain.linearRampToValueAtTime(0.028, t + Math.min(0.6, dur * 0.15)); gg.gain.setValueAtTime(0.028, t + dur * 0.88);
+      gg.gain.linearRampToValueAtTime(0, t + dur * 0.97); o.start(t); o.stop(t + dur + 0.1);
+    }else{ /* 呼气 */
+      o.frequency.setValueAtTime(523.25, t); o.frequency.linearRampToValueAtTime(349.23, t + dur * 0.92);
+      gg.gain.linearRampToValueAtTime(0.045, t + Math.min(1, dur * 0.12)); gg.gain.setValueAtTime(0.045, t + dur * 0.88);
+      gg.gain.linearRampToValueAtTime(0, t + dur * 0.99); o.start(t); o.stop(t + dur + 0.1);
+    }
+    guideStop = function(){ try{ o.stop(); mark.stop(); }catch(e){} o.disconnect(); gg.disconnect(); mark.disconnect(); mg.disconnect(); guideStop = null; };
+  }
+
+  /* ---- 播放控制 ---- */
+  function play(){
+    /* 【新增·5分钟快速呼吸】无音源场景（sources 为空）完全不创建音频上下文，保证静音 */
+    if(state.sources.length){
+      ensure(); resume(); setSources(state.sources);
+      /* 【音频系统升级】在线音效异步加载提示（已缓存的不会提示） */
+      var pending = state.sources.filter(function(id){ return SOURCES[id] && SOURCES[id].url && !bufCache[id]; });
+      if(pending.length) toast('音频加载中，请稍候…');
+    }
+    state.playing = true; state.wasPlaying = true; playStartTs = Date.now();
+  }
+  function pause(){
+    nodes.forEach(function(_, id){ fadeOut(id); });
+    if(guideStop) guideStop();
+    state.playing = false; state.wasPlaying = false;
+  }
+  function setVolume(v){ if(!master) return; var t = ctx.currentTime; master.gain.cancelScheduledValues(t);
+    master.gain.setValueAtTime(master.gain.value, t); master.gain.linearRampToValueAtTime(v, t + 0.15); }
+
+  /* 【音频系统升级】新增导出：setSoundVolume 独立音量 / isLoading 加载态查询 */
+  return { ensure:ensure, resume:resume, running:running, play:play, pause:pause, setSources:setSources, guide:guide, setVolume:setVolume, setSoundVolume:setSoundVolume, isLoading:isLoading };
+})();
+
+/* ============================================================
+ * 【新增·多模式呼吸】呼吸引导可视化（支持 4 套节奏 + 圆形/波浪双形态）
+ *   1) phaseInfoAt：按当前模式的阶段表计算所处阶段与剩余时长
+ *   2) injectBreathKeyframes：按模式生成 CSS 缩放关键帧（brDyn）并设置周期
+ *   3) doVibrate：阶段切换时按模式震动（需设置开启且浏览器支持）
+ * ========================================================== */
+var curPhase = '';
+function phaseInfoAt(t){
+  var pat = BREATH_PATTERNS[state.breathMode] || BREATH_PATTERNS['478'];
+  var cycle = patternCycle(pat);
+  var x = ((t % cycle) + cycle) % cycle, acc = 0;
+  for(var i = 0; i < pat.phases.length; i++){
+    /* 【v3 皮肤】额外返回 start / x（本阶段起点与本周期内偏移），供节拍读秒展示使用，
+       原有 name / dur 字段与调用方完全兼容 */
+    if(x < acc + pat.phases[i].dur) return { name: pat.phases[i].name, dur: pat.phases[i].dur, start: acc, x: x };
+    acc += pat.phases[i].dur;
+  }
+  var last = pat.phases[pat.phases.length - 1];
+  return { name: last.name, dur: last.dur, start: 0, x: x };
+}
+function phaseAt(t){ return phaseInfoAt(t).name; }   // 兼容旧调用
+function injectBreathKeyframes(){
+  var pat = BREATH_PATTERNS[state.breathMode] || BREATH_PATTERNS['478'];
+  var cycle = patternCycle(pat);
+  /* 找到首个吸气 / 呼气阶段的时间区间，生成 scale 关键帧：
+     吸气段 .8→1，其余阶段保持当前尺寸，呼气段 1→.8 */
+  var inh = null, exh = null, acc = 0;
+  pat.phases.forEach(function(ph){
+    if(ph.name === '吸气' && !inh) inh = { s: acc, e: acc + ph.dur };
+    if(ph.name === '呼气' && !exh) exh = { s: acc, e: acc + ph.dur };
+    acc += ph.dur;
+  });
+  function pct(v){ return (v / cycle * 100).toFixed(2) + '%'; }
+  var kf = '@keyframes brDyn{0%{transform:scale(.8)}';
+  if(inh) kf += pct(inh.s) + '{transform:scale(.8)}' + pct(inh.e) + '{transform:scale(1)}';
+  if(exh) kf += pct(exh.s) + '{transform:scale(1)}' + pct(exh.e) + '{transform:scale(.8)}';
+  kf += '100%{transform:scale(.8)}}';
+  var st = $('breath-kf');
+  if(!st){ st = document.createElement('style'); st.id = 'breath-kf'; document.head.appendChild(st); }
+  st.textContent = kf;
+  var btn = $('breath-btn');
+  if(btn) btn.style.setProperty('--br-dur', cycle + 's');
+}
+function doVibrate(phase){
+  if(!state.vibrate || !('vibrate' in navigator)) return;
+  try{
+    /* 短促激活模式用更短的震动；吸/屏/呼分别对应不同时长 */
+    var ms = state.breathMode === 'active'
+      ? (phase === '吸气' ? 25 : 15)
+      : (phase === '吸气' ? 60 : (phase === '屏息' ? 20 : 40));
+    navigator.vibrate(ms);
+  }catch(e){}
+}
+var lastBeat = '';
+function breathLoop(){
+  /* 未播放时不做阶段计算、不显示文字、不播引导音，气泡保持静止 */
+  if(!state.playing){
+    if(curPhase !== ''){ curPhase = ''; $('breath-phase').textContent = ''; }
+    /* 【v3 皮肤】暂停时清空节拍数字 */
+    if(lastBeat !== ''){ lastBeat = ''; var be = $('breath-beat'); if(be) be.textContent = ''; }
+    requestAnimationFrame(breathLoop); return;
+  }
+  var info = phaseInfoAt((performance.now() - breathStart) / 1000);
+  if(info.name !== curPhase){
+    curPhase = info.name;
+    $('breath-phase').textContent = info.name;
+    /* 震动提示：阶段切换即震，不用紧盯屏幕 */
+    doVibrate(info.name);
+    /* 播放中且开启呼吸引导时，每个阶段切换播放提示音（时长适配当前模式） */
+    if(state.sources.indexOf('guide') !== -1 && AudioEngine.running()) AudioEngine.guide(info.name, info.dur);
+  }
+  /* 【v3 皮肤】圆心节拍数字：只读展示当前阶段剩余秒数，不参与任何节奏计算 */
+  var beatEl = $('breath-beat');
+  if(beatEl){
+    var left = Math.max(1, Math.ceil(info.dur - (info.x - info.start)));
+    var beatTxt = String(left);
+    if(beatTxt !== lastBeat){ lastBeat = beatTxt; beatEl.textContent = beatTxt; }
+  }
+  requestAnimationFrame(breathLoop);
+}
+var breathStart = performance.now();
+
+/* ============================================================
+ * 4. DOM 工具与视图切换
+ * ========================================================== */
+function $(id){ return document.getElementById(id); }
+function toast(msg){
+  var t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer); t._timer = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+function showView(name){
+  ['scenes','settings','history','stress'].forEach(function(v){
+    $( 'view-' + v ).classList.toggle('active', v === name);
+  });
+  /* 【新增·折叠面板】进入设置页时按上次保存的状态恢复音效试听折叠面板 */
+  if(name === 'settings') syncPreviewPanel();
+  /* 【音频系统升级】离开设置页时停止音效试听，避免回到首页还在单独响 */
+  if(name !== 'settings' && previewId) stopPreview();
+}
+function fmt(sec){ var m = Math.floor(sec/60), s = sec%60; return (m<10?'0':'')+m+':'+(s<10?'0':'')+s; }
+
+/* ============================================================
+ * 5. 首页：播放控制与状态展示
+ * ========================================================== */
+function sceneName(){
+  return state.scene === 'custom' ? '自定义' : SCENES[state.scene].name;
+}
+/* 安全切换音源：合成器异常时不打断界面响应 */
+function safeSetSources(){ try{ AudioEngine.setSources(state.sources); }catch(e){} }
+function sourcesText(){
+  /* 【新增·5分钟快速呼吸】无音源时显示“仅呼吸引导”而非“未选择” */
+  if(!state.sources.length) return '仅呼吸引导';
+  return state.sources.map(function(id){ return SOURCES[id].name; }).join(' + ');
+}
+function updateHomeStatus(){
+  var label = $('breath-label');
+  if(state.playing){
+    label.textContent = '正在放松';
+    var timerTxt = state.timerMin > 0 ? ' · 剩余 ' + fmt(remainSec) : '';
+    $('home-status').textContent = sceneName() + ' · ' + sourcesText() + timerTxt;
+  }else{
+    label.textContent = '开始放松';
+    $('home-status').textContent = state.wasPlaying || state.scene !== 'anxiety'
+      ? '已暂停 · ' + sceneName() + ' · ' + sourcesText()
+      : '轻触气泡，开始放松';
+  }
+  /* 呼吸动画开关：仅播放中且设置开启时才有气泡变化 */
+  var showBreath = state.playing && state.breathing;
+  $('breath-btn').classList.toggle('breathing', showBreath);
+  /* 【新增·多模式呼吸】动画形态跟随设置（圆形 / 波浪） */
+  $('breath-btn').classList.toggle('wave', state.animType === 'wave');
+  /* 非播放状态：隐藏呼吸阶段文字，气泡保持静止 */
+  if(!showBreath && curPhase !== ''){ curPhase = ''; $('breath-phase').textContent = ''; }
+  /* 【新增·场景动态背景】播放时显示当前背景效果，暂停时淡出 */
+  applyBgFx();
+  /* 【v3 皮肤】节奏说明：按当前呼吸模式展示「吸气 4 · 屏息 7 · 呼气 8」（纯展示） */
+  var cad = $('breath-cadence');
+  if(cad){
+    var pt = BREATH_PATTERNS[state.breathMode] || BREATH_PATTERNS['478'];
+    cad.textContent = pt.phases.map(function(ph){ return ph.name + ' ' + ph.dur; }).join(' · ');
+  }
+}
+function togglePlay(){
+  if(state.playing){
+    var d = logHistory(true);      // 手动暂停也记录一次
+    AudioEngine.pause(); stopTimer();
+    /* 【新增·知识小卡片】练习满 60 秒才弹，避免点一下就弹的打扰感 */
+    if(d >= 60) showTipCard();
+  }else{
+    /* 快速呼吸场景保持静音：不用默认音源兜底（sources 为空即纯视觉模式） */
+    if(!state.sources.length && state.scene !== 'quick'){ state.sources = SCENES.anxiety.sources.slice(); }
+    breathStart = performance.now(); curPhase = '';   /* 每次播放从当前模式的第一阶段重新起算 */
+    /* 容错：音频初始化异常时不阻断 UI 反馈（动画/文字照常响应） */
+    try{ AudioEngine.play(); }catch(e){ toast('音频启动失败，请再点一次'); }
+    startTimer();
+    $('gate').classList.remove('show');   // 用户主动点气泡播放时，隐藏引导层
+  }
+  save(); updateHomeStatus(); updateMediaSession();
+}
+function attemptAutoPlay(){
+  /* 打开应用即播：恢复上次场景并自动播放（浏览器可能要求一次手势） */
+  /* 【新增·5分钟快速呼吸】纯视觉场景恢复：无需音频上下文，直接进入播放态跑动画+倒计时 */
+  if(state.wasPlaying && state.scene === 'quick' && !state.sources.length){
+    state.playing = true; startTimer();
+    updateHomeStatus(); updateMediaSession(); save(); return;
+  }
+  if(!state.wasPlaying || !state.sources.length){ updateHomeStatus(); return; }
+  var done = false;
+  /* 超时保护：resume() 长期 pending（部分浏览器无手势时）时显示轻触引导层 */
+  var to = setTimeout(function(){
+    if(done) return; done = true;
+    $('gate').classList.add('show'); updateHomeStatus();
+  }, 2500);
+  AudioEngine.resume().then(function(){
+    if(done) return; done = true; clearTimeout(to);
+    if(AudioEngine.running()){ AudioEngine.play(); startTimer(); }
+    else $('gate').classList.add('show');   // 被自动播放策略拦截时，显示一次性轻触引导层
+    updateHomeStatus(); updateMediaSession(); save();
+  }).catch(function(){
+    if(done) return; done = true; clearTimeout(to);
+    $('gate').classList.add('show'); updateHomeStatus();
+  });
+}
+
+/* ============================================================
+ * 6. 场景选择与自定义组合
+ * ========================================================== */
+function applyScene(key){
+  var sc = SCENES[key];
+  state.scene = key; state.sources = sc.sources.slice();
+  /* 【新增·多模式呼吸】切换场景时绑定该场景的默认呼吸模式（用户之后仍可手动更换） */
+  if(sc.breath){ state.breathMode = sc.breath; breathStart = performance.now(); curPhase = ''; injectBreathKeyframes(); }
+  /* 失眠场景：默认自动开启 30 分钟定时关闭（用户已设置则不覆盖） */
+  if(key === 'insomnia' && state.timerMin === 0){
+    state.timerMin = 30; toast('已开启 30 分钟定时关闭');
+  }
+  /* 【新增·5分钟快速呼吸】选中即自动开始：5 分钟倒计时 + 纯视觉呼吸动画（静音） */
+  if(key === 'quick'){
+    state.timerMin = 5;
+    if(!state.playing){
+      AudioEngine.play();       // sources 为空 → 不启动任何音频
+      startTimer();
+      toast('5 分钟快速呼吸开始 · 静音模式');
+    }
+  }
+  if(state.playing){ safeSetSources(); if(state.timerMin > 0) startTimer(); }
+  save(); renderScenes(); renderSourceChips(); renderTimerChips(); renderBreathChips();
+  updateHomeStatus(); updateMediaSession(); applyBgFx();   /* applyBgFx：bgFx='auto' 时跟随新场景 */
+}
+function toggleSource(id){
+  var i = state.sources.indexOf(id);
+  if(i !== -1){ if(state.sources.length <= 1){ toast('至少保留一种声音'); return; } state.sources.splice(i,1); }
+  else{
+    /* 【音频系统升级】环境音最多同时 2 种（功能音：风铃/专注音/呼吸引导不受限） */
+    if(SOURCES[id].amb){
+      var ambN = state.sources.filter(function(x){ return SOURCES[x] && SOURCES[x].amb; }).length;
+      if(ambN >= 2){ toast('环境音最多同时选择 2 种，可先关闭一种'); return; }
+    }
+    state.sources.push(id);
+  }
+  /* 【音频系统升级】快速呼吸场景下手动叠加环境音时保持场景不变（仍走 5 分钟倒计时） */
+  if(state.scene !== 'quick') state.scene = 'custom';   // 改动即视为自定义组合
+  if(state.playing) safeSetSources();
+  save(); renderScenes(); renderSourceChips(); updateHomeStatus(); updateMediaSession();
+}
+function renderScenes(){
+  document.querySelectorAll('#scene-cards .card').forEach(function(card){
+    card.classList.toggle('active', card.dataset.scene === state.scene);
+  });
+}
+
+/* ============================================================
+ * 场景卡片横向滑动辅助：翻页箭头 + 圆点指示器 + 鼠标拖拽
+ * （原生 overflow-x:auto 在手机上可触摸滑动，但桌面鼠标无法
+ *   拖拽、用户也难发现第 4 张卡片，故补三套辅助交互）
+ * ========================================================== */
+function initCardsNav(){
+  var box = $('scene-cards'), prev = $('cards-prev'), next = $('cards-next'), dotsBox = $('cards-dots');
+  if(!box) return;
+  var cards = Array.prototype.slice.call(box.querySelectorAll('.card'));
+
+  /* 圆点：按卡片数量生成 */
+  cards.forEach(function(){ var i = document.createElement('i'); dotsBox.appendChild(i); });
+  var dots = Array.prototype.slice.call(dotsBox.children);
+
+  /* 当前最近卡片的索引（按滚动位置近似） */
+  function currentIndex(){
+    var cardW = cards[0].offsetWidth + 14;                 // 含 gap
+    var idx = Math.round(box.scrollLeft / cardW);
+    return Math.max(0, Math.min(cards.length - 1, idx));
+  }
+  function scrollToCard(idx){
+    idx = Math.max(0, Math.min(cards.length - 1, idx));
+    cards[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+  }
+  function syncUI(){
+    var idx = currentIndex();
+    dots.forEach(function(d, i){ d.classList.toggle('on', i === idx); });
+    prev.hidden = idx === 0;
+    next.hidden = idx === cards.length - 1;
+  }
+  prev.addEventListener('click', function(){ scrollToCard(currentIndex() - 1); });
+  next.addEventListener('click', function(){ scrollToCard(currentIndex() + 1); });
+  box.addEventListener('scroll', function(){ syncUI(); }, { passive:true });
+  syncUI();
+
+  /* 鼠标拖拽横向滚动（pointerType 为 touch/pen 时交给浏览器原生滚动，避免冲突） */
+  var dragging = false, dragged = false, startX = 0, startScroll = 0;
+  box.addEventListener('pointerdown', function(e){
+    if(e.pointerType !== 'mouse') return;
+    dragging = true; dragged = false; startX = e.clientX; startScroll = box.scrollLeft;
+  });
+  window.addEventListener('pointermove', function(e){
+    if(!dragging) return;
+    var dx = e.clientX - startX;
+    if(Math.abs(dx) > 6) dragged = true;
+    box.scrollLeft = startScroll - dx;                     // 实时跟手滚动
+  });
+  window.addEventListener('pointerup', function(){ dragging = false; });
+  /* 拖拽过后的那次 click 视为误触，拦截掉，避免拖完顺手切了场景 */
+  box.addEventListener('click', function(e){
+    if(dragged){ e.stopPropagation(); e.preventDefault(); dragged = false; }
+  }, true);
+}
+function renderSourceChips(){
+  var box = $('source-chips'); box.innerHTML = '';
+  CUSTOM_ORDER.forEach(function(id){
+    var b = document.createElement('button');
+    b.className = 'chip' + (state.sources.indexOf(id) !== -1 ? ' on' : '');
+    b.textContent = SOURCES[id].name;
+    b.onclick = function(){ toggleSource(id); };
+    box.appendChild(b);
+  });
+  renderSoundVols();          /* 【音频系统升级】同步渲染当前在用环境音的独立音量滑条 */
+}
+
+/* ============================================================
+ * 【音频系统升级】环境音独立音量：当前在用的每种环境音一条滑条，
+ *   拖动即调（AudioEngine.setSoundVolume 平滑渐变），配置存 localStorage。
+ * ========================================================== */
+function renderSoundVols(){
+  var box = $('sound-vols'); if(!box) return;
+  box.innerHTML = '';
+  var ambs = state.sources.filter(function(id){ return SOURCES[id] && SOURCES[id].amb; });
+  ambs.forEach(function(id){
+    var cur = (state.vols[id] !== undefined) ? state.vols[id] : SOURCES[id].level;
+    var row = document.createElement('div'); row.className = 'vol-row';
+    var name = document.createElement('span'); name.className = 'vol-name'; name.textContent = SOURCES[id].name;
+    var slider = document.createElement('input');
+    slider.type = 'range'; slider.min = '0'; slider.max = '100';
+    slider.value = String(Math.round(cur * 100));
+    /* 【v3 皮肤】滑条青绿填充比例（纯展示） */
+    slider.style.setProperty('--fill', slider.value + '%');
+    var val = document.createElement('span'); val.className = 'vol-val'; val.textContent = slider.value + '%';
+    slider.addEventListener('input', function(){
+      val.textContent = this.value + '%';
+      this.style.setProperty('--fill', this.value + '%');
+      AudioEngine.setSoundVolume(id, this.value / 100);
+    });
+    row.appendChild(name); row.appendChild(slider); row.appendChild(val);
+    box.appendChild(row);
+  });
+}
+
+/* ============================================================
+ * 【音频系统升级】音效试听（设置面板）：单独试听每段背景音。
+ *   试听前自动暂停主音频并记住状态，停止试听后恢复，不打断原有播放。
+ * ========================================================== */
+var previewId = null, previewResume = false;
+function renderPreviewList(){
+  var box = $('preview-list'); if(!box) return;
+  box.innerHTML = '';
+  CUSTOM_ORDER.forEach(function(id){
+    var s = SOURCES[id];
+    if(!s.amb) return;                              // 只试听背景环境音
+    var row = document.createElement('div'); row.className = 'pv-row';
+    var name = document.createElement('span'); name.className = 'pv-name'; name.textContent = s.name;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pv-btn' + (previewId === id ? ' on' : '');
+    if(previewId === id) btn.textContent = '⏸ 停止';
+    else if(AudioEngine.isLoading(id)){ btn.textContent = '加载中…'; btn.disabled = true; }
+    else btn.textContent = '▶ 试听';
+    btn.onclick = function(){ togglePreview(id); };
+    row.appendChild(name); row.appendChild(btn);
+    box.appendChild(row);
+  });
+}
+function togglePreview(id){
+  if(previewId === id){ stopPreview(); return; }
+  previewResume = state.playing;
+  if(state.playing){ AudioEngine.pause(); stopTimer(); updateHomeStatus(); }
+  if(previewId) AudioEngine.setSources([]);        // 淡出上一段试听
+  previewId = id;
+  AudioEngine.setSources([id]);
+  renderPreviewList();
+  /* 在线音效加载完成后刷新按钮状态（加载中 → 可停止） */
+  var t0 = Date.now();
+  (function waitLoad(){
+    if(AudioEngine.isLoading(id)){
+      if(Date.now() - t0 < 15000){ setTimeout(waitLoad, 300); return; }
+    }
+    if(previewId === id) renderPreviewList();
+  })();
+}
+function stopPreview(){
+  if(!previewId) return;
+  AudioEngine.setSources([]);                      // 淡出试听音
+  previewId = null;
+  if(previewResume){
+    previewResume = false;
+    AudioEngine.play();                            // 恢复主音频（淡入）
+    if(state.timerMin > 0) startTimer();
+    updateHomeStatus(); updateMediaSession();
+  }
+  renderPreviewList();
+}
+
+/* ============================================================
+ * 【新增·折叠面板】音效试听折叠/展开（设置页）
+ *   默认收起，只显示标题卡片；点击卡片平滑展开全部音效列表。
+ *   展开/收起状态写入 localStorage，下次进入设置页保持上次状态。
+ *   试听按钮的播放/停止逻辑完全不变，仅在外面包一层可折叠容器。
+ * ========================================================== */
+var PV_TIP_OPEN = '点击单独试听每段背景音，再次点击停止';     /* 展开时的副标题文案 */
+var PV_TIP_CLOSED = '点击展开试听各类背景音效';             /* 收起时的副标题文案 */
+/* 应用折叠状态：instant=true 时不过渡（初始化/进入页面时直接定位） */
+function setPreviewPanel(open, instant){
+  var box = $('preview-collapse'); if(!box) return;
+  var toggle = $('preview-toggle');
+  box.classList.toggle('open', open);                /* 容器挂 .open：解除 visibility 限制并渐显列表 */
+  toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  $('preview-arrow').style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';  /* 展开朝上 / 收起朝下 */
+  var tip = $('pv-toggle-tip');
+  if(tip) tip.textContent = open ? PV_TIP_OPEN : PV_TIP_CLOSED;
+  if(instant){
+    var prevTransition = box.style.transition;
+    box.style.transition = 'none';                 /* 临时关闭过渡，直接定位不闪一下 */
+    box.style.maxHeight = open ? (box.scrollHeight + 'px') : '0px';
+    void box.offsetHeight;                         /* 强制回流后恢复过渡设置 */
+    box.style.transition = prevTransition;
+    return;
+  }
+  if(open){
+    box.style.maxHeight = box.scrollHeight + 'px'; /* 从当前高度平滑过渡到内容全高 */
+  }else{
+    box.style.maxHeight = box.scrollHeight + 'px'; /* 先固定当前高度，再收起，保证过渡生效 */
+    void box.offsetHeight;                         /* 强制回流 */
+    box.style.maxHeight = '0px';
+  }
+}
+/* 按 state.pvCollapsed 同步界面（初始化 / 每次进入设置页时调用） */
+function syncPreviewPanel(){ setPreviewPanel(!state.pvCollapsed, true); }
+/* 点击标题卡片：切换折叠状态并持久化到 localStorage */
+function togglePreviewPanel(){
+  state.pvCollapsed = !state.pvCollapsed;
+  save();
+  setPreviewPanel(!state.pvCollapsed, false);
+}
+
+/* ============================================================
+ * 7. 定时关闭（10/20/30/60 分钟，时间到自动停止）
+ * ========================================================== */
+function setTimer(min){
+  state.timerMin = min;
+  if(state.playing){ startTimer(); } else { stopTimer(); updateHomeStatus(); }
+  save(); renderTimerChips(); updateHomeStatus();
+}
+function startTimer(){
+  stopTimer();
+  if(state.timerMin > 0){
+    remainSec = state.timerMin * 60;
+    timerInt = setInterval(function(){
+      remainSec--;
+      if(remainSec <= 0){
+        stopTimer(); logHistory(false);
+        AudioEngine.pause();
+        toast('⏰ 定时时间到，已自动停止');
+        /* 【新增·知识小卡片】一次练习计时结束后，随机展示一条心理科普 */
+        showTipCard();
+      }
+      updateHomeStatus();
+    }, 1000);
+  }else remainSec = 0;
+}
+function stopTimer(){ if(timerInt){ clearInterval(timerInt); timerInt = null; } }
+function renderTimerChips(){
+  var box = $('timer-chips'); box.innerHTML = '';
+  TIMER_OPTIONS.forEach(function(m){
+    var b = document.createElement('button');
+    b.className = 'chip' + (state.timerMin === m ? ' on' : '');
+    b.textContent = m === 0 ? '关闭' : m + ' 分钟';
+    b.onclick = function(){ setTimer(m); };
+    box.appendChild(b);
+  });
+  $('timer-tip').textContent = state.timerMin > 0
+    ? '将在 ' + fmt(remainSec || state.timerMin*60) + ' 后自动停止播放。'
+    : '时间到自动停止播放，不打扰你入睡。';
+}
+
+/* ============================================================
+ * 8. 历史记录（保存上次场景、音频、定时参数与实际时长）
+ * ========================================================== */
+function logHistory(manual){
+  if(!state.playing && !playStartTs) return 0;
+  var dur = playStartTs ? Math.round((Date.now() - playStartTs)/1000) : 0;
+  if(dur < 5){ playStartTs = 0; return 0; }        // 太短的播放不记录
+  state.history.unshift({
+    ts: Date.now(),
+    scene: sceneName(),
+    sources: sourcesText(),
+    sec: dur,
+    timer: state.timerMin > 0 ? state.timerMin + '分钟定时' : '无定时'
+  });
+  if(state.history.length > 50) state.history.length = 50;
+  playStartTs = 0; save();
+  return dur;                                      /* 返回值供调用方判断是否弹知识小卡片 */
+}
+function renderHistory(){
+  var box = $('history-list');
+  if(!state.history.length){
+    box.innerHTML = '<div class="his-empty">还没有放松记录<br>每次暂停或定时结束后会自动保存</div>';
+    return;
+  }
+  box.innerHTML = state.history.map(function(h){
+    var d = new Date(h.ts);
+    var time = d.getMonth()+1 + '月' + d.getDate() + '日 ' + (d.getHours()<10?'0':'')+d.getHours() + ':' + (d.getMinutes()<10?'0':'')+d.getMinutes();
+    return '<div class="his-item"><div class="his-top"><span class="his-scene">' + h.scene +
+      '</span><span class="his-time">' + time + '</span></div>' +
+      '<div class="his-meta">' + h.sources + ' · 时长 ' + fmt(h.sec) + ' · ' + h.timer + '</div></div>';
+  }).join('');
+}
+
+/* ============================================================
+ * 【新增·多模式呼吸】UI 交互：呼吸模式选择 / 动画形态切换
+ * ========================================================== */
+function setBreathMode(key){
+  state.breathMode = key;
+  breathStart = performance.now(); curPhase = '';     /* 重置周期起点，立即按新节奏走 */
+  injectBreathKeyframes(); renderBreathChips(); save(); updateHomeStatus();
+}
+function renderBreathChips(){
+  var box = $('breath-chips'); if(!box) return;
+  box.innerHTML = '';
+  BREATH_ORDER.forEach(function(key){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (state.breathMode === key ? ' on' : '');
+    b.textContent = BREATH_PATTERNS[key].name;
+    b.onclick = function(){ setBreathMode(key); };
+    box.appendChild(b);
+  });
+  /* 提示文案说明当前模式与场景默认的关系 */
+  var sc = SCENES[state.scene];
+  var tip = $('breath-tip');
+  if(tip) tip.textContent = (sc && sc.breath === state.breathMode)
+    ? '当前为「' + sc.name + '」场景的默认模式，也可手动更换。'
+    : '已手动选择「' + BREATH_PATTERNS[state.breathMode].name + '」，切换场景会恢复默认。';
+}
+function setAnimType(type){
+  state.animType = type;
+  $('breath-btn').classList.toggle('wave', type === 'wave');
+  renderAnimSeg(); save(); updateHomeStatus();
+}
+function renderAnimSeg(){
+  document.querySelectorAll('#anim-seg .chip').forEach(function(b){
+    var on = b.dataset.anim === state.animType;
+    b.classList.toggle('on', on);
+  });
+}
+
+/* ============================================================
+ * 【新增·压力释放】轻量练习入口逻辑
+ *   【本次修改·删除匿名文字树洞】closeStress 不再需要清空输入框：
+ *   弹窗内已无任何用户输入内容，两项练习均为纯引导文本。
+ * ========================================================== */
+function openStress(){ showView('stress'); }
+function closeStress(){ showView(''); }
+
+/* ============================================================
+ * 【新增·场景动态背景】4 种纯 CSS 低饱和动效
+ *   映射：焦虑→湖面落雨 / 疲惫→森林 / 失眠→星空 / 快速呼吸→篝火；
+ *   仅在音频播放时显示；页面隐藏（息屏/切后台）时动画暂停、音频继续。
+ * ========================================================== */
+var SCENE_BG = { anxiety:'rain', tired:'forest', insomnia:'stars', quick:'fire' };
+var BG_OPTIONS = [
+  { v:'auto',  name:'跟随场景' },
+  { v:'rain',  name:'湖面落雨' },
+  { v:'stars', name:'星空' },
+  { v:'forest',name:'森林' },
+  { v:'fire',  name:'篝火' },
+  { v:'off',   name:'关闭' }
+];
+function currentBgFx(){
+  if(state.bgFx !== 'auto') return state.bgFx;
+  return SCENE_BG[state.scene] || 'rain';
+}
+function applyBgFx(){
+  var fx = $('bg-fx'); if(!fx) return;
+  var key = state.playing ? currentBgFx() : 'off';
+  var on = state.playing && key !== 'off';
+  fx.dataset.fx = on ? key : 'none';
+  fx.classList.toggle('on', on);
+}
+function setBgFx(v){
+  state.bgFx = v; save(); renderBgChips(); applyBgFx();
+}
+function renderBgChips(){
+  var box = $('bg-chips'); if(!box) return;
+  box.innerHTML = '';
+  BG_OPTIONS.forEach(function(o){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (state.bgFx === o.v ? ' on' : '');
+    b.textContent = o.name;
+    b.onclick = function(){ setBgFx(o.v); };
+    box.appendChild(b);
+  });
+}
+/* 动态背景粒子生成：雨丝 / 星点 / 光斑 / 火星（一次性生成，CSS 负责动画） */
+function initBgParticles(){
+  var fx = $('bg-fx'); if(!fx || fx._built) return;
+  fx._built = true;
+  function el(cls, parent){ var d = document.createElement('i'); d.className = cls; parent.appendChild(d); return d; }
+  /* 湖面落雨：26 条雨丝 + 3 处涟漪 */
+  var rain = fx.querySelector('.fx-rain');
+  for(var i = 0; i < 26; i++){
+    var d = el('fx-drop', rain);
+    d.style.left = (Math.random() * 100) + '%';
+    d.style.animationDuration = (0.9 + Math.random() * 1.1) + 's';
+    d.style.animationDelay = (-Math.random() * 2) + 's';
+    d.style.opacity = 0.5 + Math.random() * 0.5;
+  }
+  for(var r = 0; r < 3; r++){
+    var rp = el('fx-ripple', rain);
+    rp.style.left = (18 + r * 30) + '%';
+    rp.style.animationDelay = (r * 1.5) + 's';
+  }
+  /* 星空：30 颗星点 */
+  var stars = fx.querySelector('.fx-stars');
+  for(var s = 0; s < 30; s++){
+    var st = el('fx-star', stars);
+    st.style.left = (Math.random() * 100) + '%';
+    st.style.top = (Math.random() * 62) + '%';
+    st.style.animationDuration = (2.4 + Math.random() * 2.4) + 's';
+    st.style.animationDelay = (-Math.random() * 4) + 's';
+  }
+  /* 森林：6 团柔光斑 */
+  var forest = fx.querySelector('.fx-forest');
+  for(var b = 0; b < 6; b++){
+    var bl = el('fx-blob', forest);
+    var size = 90 + Math.random() * 110;
+    bl.style.width = size + 'px'; bl.style.height = size + 'px';
+    bl.style.left = (Math.random() * 82) + '%'; bl.style.top = (Math.random() * 70) + '%';
+    bl.style.animationDuration = (11 + Math.random() * 9) + 's';
+    bl.style.animationDelay = (-Math.random() * 8) + 's';
+  }
+  /* 篝火：光晕 + 10 颗火星 */
+  var fire = fx.querySelector('.fx-fire');
+  var glow = document.createElement('i'); glow.className = 'fx-fire-glow'; fire.appendChild(glow);
+  for(var p = 0; p < 10; p++){
+    var sp = el('fx-spark', fire);
+    sp.style.left = (34 + Math.random() * 32) + '%';
+    sp.style.animationDuration = (3.2 + Math.random() * 2) + 's';
+    sp.style.animationDelay = (-Math.random() * 4) + 's';
+  }
+}
+
+/* ============================================================
+ * 【新增·减压知识小卡片】一次练习结束后随机展示一条
+ *   原则：简短、不说教、不收藏、可手动关闭
+ * ========================================================== */
+var TIPS = [
+  '焦虑时呼吸加快，是身体在为你准备应对挑战——说明它很在乎你。',
+  '不必强迫自己保持开心，情绪没有对错，来了也会走。',
+  '紧张的时候，身体在保护你，它在用它的方式陪你过关。',
+  '疲惫不是懒，是身体在提醒你：该休息了。',
+  '把注意力放回呼吸上，你就把此刻还给了自己。',
+  '失眠的夜很长，但夜总会过去，天亮是必然的事。',
+  '允许自己慢一点，世界不会因此塌下来。',
+  '你不需要搞定所有事，先搞定这一次呼吸。'
+];
+var lastTip = -1;
+function showTipCard(){
+  var card = $('tip-card');
+  if(card.classList.contains('show')) return;      /* 同时只展示一张 */
+  var i;
+  do { i = (Math.random() * TIPS.length) | 0; } while(i === lastTip && TIPS.length > 1);
+  lastTip = i;
+  $('tip-text').textContent = TIPS[i];
+  renderWeekFooter();      /* 【v3 皮肤】完成页：本周足迹圆点（只读统计现有历史记录） */
+  card.classList.add('show');
+}
+
+/* ============================================================
+ * 【v3 皮肤】本周足迹：从现有 state.history 计算「本周练习次数」，
+ *   只做展示（7 个圆点 + 一句感性文案），不写入、不改变任何记录逻辑。
+ * ========================================================== */
+function renderWeekFooter(){
+  var dots = $('week-dots'), txt = $('week-text');
+  if(!dots || !txt) return;
+  var now = new Date();
+  var dow = (now.getDay() + 6) % 7;                       /* 周一为一周起点 */
+  var weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dow).getTime();
+  var n = 0;
+  (state.history || []).forEach(function(h){
+    if(h && h.ts >= weekStart && h.ts <= now.getTime()) n++;
+  });
+  var filled = Math.min(n, 7);
+  dots.innerHTML = '';
+  for(var k = 0; k < 7; k++){
+    var d = document.createElement('i');
+    if(k < filled) d.className = 'on';
+    dots.appendChild(d);
+  }
+  txt.textContent = n > 0
+    ? '本周陪伴了自己 ' + n + ' 次'
+    : '这周还没开始，今晚从一次呼吸开始';
+}
+
+/* ============================================================
+ * 9. 媒体会话（支持锁屏 / 后台播放控制与信息展示）
+ * ========================================================== */
+function updateMediaSession(){
+  if(!('mediaSession' in navigator)) return;
+  try{
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: state.playing ? sceneName() + ' · ' + sourcesText() : '息屏减压',
+      artist: '息屏减压',
+      album: '情绪疗愈'
+    });
+    navigator.mediaSession.playbackState = state.playing ? 'playing' : 'paused';
+    navigator.mediaSession.setActionHandler('play',  function(){ if(!state.playing) togglePlay(); });
+    navigator.mediaSession.setActionHandler('pause', function(){ if(state.playing)  togglePlay(); });
+    navigator.mediaSession.setActionHandler('stop',  function(){ if(state.playing)  togglePlay(); });
+  }catch(e){}
+}
+
+/* ============================================================
+ * 10. 事件绑定与初始化
+ * ========================================================== */
+function init(){
+  /* 首页 */
+  $('breath-btn').addEventListener('click', togglePlay);
+  $('btn-scenes').addEventListener('click', function(){
+    renderScenes(); renderSourceChips(); renderTimerChips(); showView('scenes');
+    $('scene-cards').dispatchEvent(new Event('scroll'));   /* 打开场景页时刷新箭头/圆点状态 */
+  });
+  $('btn-settings').addEventListener('click', function(){ renderPreviewList(); showView('settings'); });
+  $('btn-history').addEventListener('click', function(){ renderHistory(); showView('history'); });
+  /* 【新增·压力释放】入口与返回 */
+  $('btn-stress').addEventListener('click', openStress);
+  $('stress-back').addEventListener('click', closeStress);
+  document.querySelectorAll('[data-back]').forEach(function(b){
+    b.addEventListener('click', function(){ showView(''); });
+  });
+
+  /* 场景卡片 */
+  document.querySelectorAll('#scene-cards .card').forEach(function(card){
+    card.addEventListener('click', function(){ applyScene(card.dataset.scene); });
+  });
+  initCardsNav();   // 横向滑动辅助（箭头/圆点/鼠标拖拽）
+
+  /* 设置项 */
+  /* 【v3 皮肤】滑条填充比例：仅把当前值写进 --fill 供 CSS 画青绿进度，取值逻辑不变 */
+  var syncRangeFill = function(el){ if(el) el.style.setProperty('--fill', el.value + '%'); };
+  $('volume-range').value = Math.round(state.volume * 100);
+  syncRangeFill($('volume-range'));
+  $('volume-range').addEventListener('input', function(){
+    state.volume = this.value / 100; AudioEngine.setVolume(state.volume);
+    syncRangeFill(this); save();
+  });
+  /* 【新增·折叠面板】音效试听：点击标题卡片展开/收起；支持 Enter/Space 键盘操作 */
+  var pvToggle = $('preview-toggle');
+  if(pvToggle){
+    pvToggle.addEventListener('click', togglePreviewPanel);
+    pvToggle.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); togglePreviewPanel(); }
+    });
+  }
+  $('breath-switch').checked = !!state.breathing;
+  $('breath-switch').addEventListener('change', function(){
+    state.breathing = this.checked; save(); updateHomeStatus();
+  });
+  /* 【新增·黑暗模式】读取上次主题设置并应用；切换时持久化保存 */
+  $('theme-switch').checked = state.theme === 'dark';
+  applyTheme();
+  $('theme-switch').addEventListener('change', function(){
+    state.theme = this.checked ? 'dark' : 'light';
+    applyTheme(); save();
+  });
+  /* 【新增·多模式呼吸】动画形态与震动开关（均 localStorage 持久化） */
+  renderAnimSeg();
+  document.querySelectorAll('#anim-seg .chip').forEach(function(b){
+    b.addEventListener('click', function(){ setAnimType(b.dataset.anim); });
+  });
+  $('vibrate-switch').checked = !!state.vibrate;
+  $('vibrate-switch').addEventListener('change', function(){
+    state.vibrate = this.checked; save();
+    toast(this.checked ? '已开启震动提示' : '已关闭震动提示');
+  });
+  /* 【本次修改·删除匿名文字树洞】原 tree-destroy 一键销毁按钮绑定已移除 */
+  /* 【新增·知识小卡片】手动关闭 */
+  $('tip-close').addEventListener('click', function(){ $('tip-card').classList.remove('show'); });
+  /* 清除历史：两步确认（不用弹窗 confirm） */
+  var clearArmed = false, clearTimer = null;
+  $('clear-history').addEventListener('click', function(){
+    var btn = this;
+    if(!clearArmed){ clearArmed = true; btn.textContent = '再点一次确认'; clearTimer = setTimeout(function(){ clearArmed = false; btn.textContent = '清除'; }, 3000); return; }
+    clearTimeout(clearTimer); clearArmed = false; btn.textContent = '清除';
+    state.history = []; save(); renderHistory(); toast('历史记录已清除');
+  });
+
+  /* 自动播放引导层【容错修复】：点按必撤层——此前撤层条件绑死在
+     AudioEngine.running() 上，iOS 等环境里 AudioContext 在加载期创建后
+     resume() 常停在 suspended，点多少下都不撤层，整页看起来像“打不开”。
+     现在：点按先无条件撤层进首页；音频能在手势内启动就顺带开播，
+     启动不了也不拦人，用户点首页气泡即可（手势内启动最可靠）。 */
+  var gateHandler = function(){
+    $('gate').classList.remove('show');
+    $('gate').removeEventListener('pointerdown', gateHandler);
+    try{
+      AudioEngine.resume().then(function(){
+        if(!AudioEngine.running()) return;      // 仍未获准播放：仅撤层，不强行开播
+        AudioEngine.play(); startTimer(); save();
+        updateHomeStatus(); updateMediaSession();
+      }).catch(function(){});
+    }catch(e){}
+    updateHomeStatus();
+  };
+  $('gate').addEventListener('pointerdown', gateHandler);
+
+  /* 页面隐藏时保存状态（保证下次打开能恢复“打开即播”） */
+  window.addEventListener('pagehide', function(){ state.wasPlaying = state.playing; save(); });
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden){
+      state.wasPlaying = state.playing; save();
+      /* 【新增·场景动态背景】息屏 / 切后台：动画自动暂停，音频经 Media Session 继续 */
+      $('bg-fx').classList.add('paused');
+    }else{
+      $('bg-fx').classList.remove('paused');
+    }
+  });
+
+  /* 初始渲染 */
+  injectBreathKeyframes();                 /* 【新增·多模式呼吸】注入当前模式关键帧 */
+  initBgParticles();                       /* 【新增·场景动态背景】生成粒子 */
+  renderScenes(); renderSourceChips(); renderTimerChips(); renderBreathChips(); renderBgChips(); renderPreviewList();
+  syncPreviewPanel();                              /* 【新增·折叠面板】按上次保存的状态恢复折叠面板 */
+  updateHomeStatus(); updateMediaSession(); applyBgFx();
+  requestAnimationFrame(breathLoop);
+
+  /* ============================================================
+   * 【v3 皮肤】新增的底部导航 / 快捷入口与问候语
+   *   说明：这些只是新皮肤带来的入口，点击后一律代理到原有按钮，
+   *   不新增任何业务流程、不改动原有状态机。
+   * ========================================================== */
+  document.querySelectorAll('[data-act]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var map = { scenes:'btn-scenes', sounds:'btn-scenes', settings:'btn-settings', stress:'btn-stress', history:'btn-history' };
+      var target = $(map[el.dataset.act]);
+      if(!target) return;
+      target.click();
+      /* 「声音」入口：打开场景页后滚动到调音台（自定义组合 + 音量微调） */
+      if(el.dataset.act === 'sounds'){
+        setTimeout(function(){
+          var box = $('sound-vols');
+          if(box) box.scrollIntoView({ behavior:'smooth', block:'center' });
+        }, 460);
+      }
+    });
+  });
+  /* 问候语随时段变化（纯展示文案，不参与任何逻辑） */
+  var greetEl = $('greet-title');
+  if(greetEl){
+    var hh = new Date().getHours();
+    greetEl.textContent = hh < 5 ? '夜深了' : hh < 11 ? '早上好' : hh < 14 ? '中午好' : hh < 18 ? '下午好' : '晚上好';
+  }
+
+  /* 打开即播：恢复上次音频 */
+  attemptAutoPlay();
+}
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+})();
+</script>
+</body>
+</html>
